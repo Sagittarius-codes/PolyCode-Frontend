@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CHAPTERS, TOTAL_XP, ALL_LESSONS } from "../data/oopsCurriculum";
-import "./oops.css";
 
 export default function OopsHub() {
   const navigate = useNavigate();

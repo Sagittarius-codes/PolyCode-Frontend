@@ -30,6 +30,12 @@ const LoginPage = lazy(() => import("./features/auth/pages/LoginPage"));
 const SignupPage = lazy(() => import("./features/auth/pages/SignupPage"));
 const DailyChallenge = lazy(() => import("./pages/DailyChallenges"));
 
+// Learn — OOP C++ pages
+const OopsHub = lazy(() => import("./features/learn/oops-cpp/pages/OopsHub"));
+const LessonPage = lazy(
+  () => import("./features/learn/oops-cpp/pages/LessonPage"),
+);
+
 const PageFallback = () => (
   <div className="loading">
     <div className="spinner-container">
@@ -69,9 +75,7 @@ function MainApp({
         onGoToStackPicker={onGoToStackPicker}
       />
       <div className="layout">
-        {isSidebarOpen && (
-          <div className="backdrop" onClick={closeSidebar} />
-        )}
+        {isSidebarOpen && <div className="backdrop" onClick={closeSidebar} />}
         <Sidebar
           isOpen={isSidebarOpen}
           onClose={closeSidebar}
@@ -98,9 +102,7 @@ function MainApp({
               />
               <Route
                 path="/category/*"
-                element={
-                  <CategoryPage selectedLanguage={selectedLanguage} />
-                }
+                element={<CategoryPage selectedLanguage={selectedLanguage} />}
               />
               <Route
                 path="/search"
@@ -120,6 +122,14 @@ function MainApp({
                 path="/daily-challenge"
                 element={<DailyChallenge theme={theme} />}
               />
+
+              {/* ── Learn: OOP C++ ── */}
+              <Route path="/learn/oops-cpp" element={<OopsHub />} />
+              <Route
+                path="/learn/oops-cpp/lesson/:lessonId"
+                element={<LessonPage />}
+              />
+
               <Route path="*" element={<Navigate to="/hub" replace />} />
             </Routes>
           </Suspense>
@@ -131,7 +141,9 @@ function MainApp({
 
 function ThemedShell({ theme, children }) {
   return (
-    <div className={`app ${theme === "light" ? "theme-light" : ""}`}>{children}</div>
+    <div className={`app ${theme === "light" ? "theme-light" : ""}`}>
+      {children}
+    </div>
   );
 }
 
@@ -149,6 +161,7 @@ function StackPickerShell({ children, savedTheme }) {
     return () => {
       html.style.backgroundColor = "";
       body.style.backgroundColor = "";
+      // Restore the real theme when leaving the stack picker
       html.setAttribute("data-theme", savedTheme);
       body.classList.toggle("light-theme", savedTheme === "light");
     };
@@ -188,9 +201,9 @@ function AppRoutes() {
 
   React.useEffect(() => {
     localStorage.setItem("theme", theme);
-    if (location.pathname === "/select-language") {
-      return;
-    }
+    // Bug fix: always apply the theme attribute, even on /select-language.
+    // StackPickerShell forces "dark" via its own useLayoutEffect and restores
+    // the real theme on unmount, so we don't need to skip this update.
     document.documentElement.setAttribute("data-theme", theme);
     document.body.classList.toggle("light-theme", theme === "light");
   }, [theme, location.pathname]);

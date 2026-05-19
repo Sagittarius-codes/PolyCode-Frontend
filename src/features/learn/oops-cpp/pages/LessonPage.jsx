@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ALL_LESSONS, CHAPTERS } from "../data/oopsCurriculum";
+import { ALL_LESSONS } from "../data/oopsCurriculum";
 import ConceptCard from "../components/ConceptCard";
 import CodeChallenge from "../components/CodeChallenge";
 import OopsSidebar from "../components/OopsSidebar";
-import "./oops.css";
 
 export default function LessonPage() {
   const { lessonId } = useParams();

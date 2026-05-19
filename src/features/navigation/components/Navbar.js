@@ -42,7 +42,12 @@ export default function Navbar({
     if (query.trim()) navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   };
 
-  const isActive = (path) => (location.pathname === path ? "active" : "");
+  // Bug fix: use startsWith for prefix-based routes (e.g. /learn/oops-cpp/lesson/*)
+  // so sub-pages correctly highlight the parent nav link.
+  const isActive = (path) =>
+    location.pathname === path || location.pathname.startsWith(path + "/")
+      ? "active"
+      : "";
 
   const handleLogout = () => {
     logout();
@@ -107,6 +112,10 @@ export default function Navbar({
         </Link>
         <Link to="/search" className={isActive("/search")}>
           Search
+        </Link>
+        {/* Learn nav link — highlights for all /learn/* sub-routes */}
+        <Link to="/learn/oops-cpp" className={isActive("/learn/oops-cpp")}>
+          Learn
         </Link>
         <NavLink
           to="/playground"
@@ -179,10 +188,16 @@ export default function Navbar({
           </div>
         ) : (
           <div className="navbar-auth-btns">
-            <Link to="/login" className="navbar-login-btn navbar-login-btn--compact">
+            <Link
+              to="/login"
+              className="navbar-login-btn navbar-login-btn--compact"
+            >
               Sign in
             </Link>
-            <Link to="/signup" className="navbar-signup-btn navbar-signup-btn--compact">
+            <Link
+              to="/signup"
+              className="navbar-signup-btn navbar-signup-btn--compact"
+            >
               Sign up
             </Link>
           </div>
