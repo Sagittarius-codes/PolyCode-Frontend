@@ -6,6 +6,7 @@ export default function Navbar({
   toggleSidebar,
   theme = "dark",
   onToggleTheme,
+  onGoToStackPicker,
 }) {
   const { user, logout } = useAuth();
   const [query, setQuery] = useState("");
@@ -26,7 +27,6 @@ export default function Navbar({
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -42,7 +42,12 @@ export default function Navbar({
     if (query.trim()) navigate(`/search?q=${encodeURIComponent(query.trim())}`);
   };
 
-  const isActive = (path) => (location.pathname === path ? "active" : "");
+  // Bug fix: use startsWith for prefix-based routes (e.g. /learn/oops-cpp/lesson/*)
+  // so sub-pages correctly highlight the parent nav link.
+  const isActive = (path) =>
+    location.pathname === path || location.pathname.startsWith(path + "/")
+      ? "active"
+      : "";
 
   const handleLogout = () => {
     logout();
@@ -52,47 +57,65 @@ export default function Navbar({
 
   return (
     <nav className="navbar">
-      {/* Hamburger */}
       <button
+        type="button"
         className="mobile-menu-toggle"
         onClick={toggleSidebar}
-        aria-label="Toggle sidebar"
+        aria-label="Toggle sidebar menu"
       >
         <span />
         <span />
         <span />
       </button>
 
-      {/* Brand */}
-      <Link to="/hub" className="navbar-brand">
+      <button
+        type="button"
+        className="navbar-brand"
+        onClick={onGoToStackPicker}
+        title="Back to all languages"
+      >
         <img src="/logo.png" alt="PolyCode Logo" className="navbar-logo" />
         <div className="navbar-brand-text">
           <span className="logo-text">PolyCode</span>
           <span className="logo-sub">v2.0 docs</span>
         </div>
-      </Link>
+      </button>
 
-      {/* Search */}
       <form className="navbar-search" onSubmit={handleSearch}>
-        <span className="search-icon-left">⌕</span>
+        <span className="search-icon-left" aria-hidden="true">
+          ⌕
+        </span>
         <input
           ref={inputRef}
-          type="text"
+          type="search"
           placeholder="Search docs, topics, code…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search"
         />
-        <span className="search-kbd">⌘K</span>
+        <span className="search-kbd" aria-hidden="true">
+          ⌘K
+        </span>
       </form>
 
-      {/* Links */}
       <div className="navbar-links">
-        <Link to="/hub" className={isActive("/hub")}>
+        <button
+          type="button"
+          className={`navbar-link-btn ${location.pathname === "/select-language" ? "active" : ""}`}
+          onClick={onGoToStackPicker}
+          title="Choose a programming language"
+        >
           Home
+        </button>
+        <Link to="/hub" className={isActive("/hub")}>
+          Docs hub
         </Link>
         <Link to="/search" className={isActive("/search")}>
           Search
+        </Link>
+        {/* Learn nav link — highlights for all /learn/* sub-routes */}
+        <Link to="/learn/oops-cpp" className={isActive("/learn/oops-cpp")}>
+          Learn
         </Link>
         <NavLink
           to="/playground"
@@ -102,6 +125,17 @@ export default function Navbar({
         >
           ▶ Playground
         </NavLink>
+      </div>
+
+      <div className="navbar-actions">
+        <Link
+          to="/search"
+          className={`navbar-icon-btn navbar-mobile-search ${isActive("/search")}`}
+          aria-label="Search"
+          title="Search"
+        >
+          ⌕
+        </Link>
 
         <button
           type="button"
@@ -110,13 +144,18 @@ export default function Navbar({
           aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
         >
-          {theme === "dark" ? "☀ Light" : "🌙 Dark"}
+          <span className="theme-toggle-icon" aria-hidden="true">
+            {theme === "dark" ? "☀" : "🌙"}
+          </span>
+          <span className="theme-toggle-label">
+            {theme === "dark" ? "Light" : "Dark"}
+          </span>
         </button>
 
-        {/* Auth section */}
         {user ? (
           <div className="navbar-user" ref={dropdownRef}>
             <button
+              type="button"
               className="navbar-avatar-btn"
               onClick={() => setDropdownOpen((o) => !o)}
               aria-label="User menu"
@@ -138,6 +177,7 @@ export default function Navbar({
                   <span>{user.email}</span>
                 </div>
                 <button
+                  type="button"
                   className="navbar-dropdown-item navbar-dropdown-logout"
                   onClick={handleLogout}
                 >
@@ -148,10 +188,16 @@ export default function Navbar({
           </div>
         ) : (
           <div className="navbar-auth-btns">
-            <Link to="/login" className="navbar-login-btn">
+            <Link
+              to="/login"
+              className="navbar-login-btn navbar-login-btn--compact"
+            >
               Sign in
             </Link>
-            <Link to="/signup" className="navbar-signup-btn">
+            <Link
+              to="/signup"
+              className="navbar-signup-btn navbar-signup-btn--compact"
+            >
               Sign up
             </Link>
           </div>

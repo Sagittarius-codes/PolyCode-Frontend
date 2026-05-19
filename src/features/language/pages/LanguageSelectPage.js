@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getLanguages } from '../../docs/services/api';
 
 const languageMeta = {
   javascript: { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg', color: '#f7df1e' },
@@ -21,7 +22,25 @@ const languageMeta = {
   'c#': { icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg', color: '#239120' },
 };
 
-export default function LanguageSelectPage({ onLanguageSelect }) {
+const fallbackLanguages = [
+  'Batchfile',
+  'C',
+  'C#',
+  'C++',
+  'Go',
+  'Java',
+  'JavaScript',
+  'PHP',
+  'Powershell',
+  'Python',
+  'Q#',
+  'R',
+  'Ruby',
+  'Rust',
+  'SQL',
+];
+
+export default function LanguageSelectPage({ onLanguageSelect, continueLanguage }) {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hoveredLanguage, setHoveredLanguage] = useState(null);
@@ -30,14 +49,16 @@ export default function LanguageSelectPage({ onLanguageSelect }) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/documents/languages`)
-        .then(res => res.json())
-        .then(data => {
-          setLanguages(data.languages || []);
+      getLanguages()
+        .then(({ data }) => {
+          const apiLanguages = Array.isArray(data.languages) ? data.languages : [];
+          setLanguages(apiLanguages.length > 0 ? apiLanguages : fallbackLanguages);
         })
         .catch(err => {
-          console.error('Error loading languages:', err);
-          setLanguages([]);
+          const status = err.response?.status;
+          const detail = err.response?.data?.error || err.message;
+          console.error('Error loading languages:', status ? `${status}: ${detail}` : detail);
+          setLanguages(fallbackLanguages);
         })
         .finally(() => setLoading(false));
     }, 500);
@@ -50,7 +71,7 @@ export default function LanguageSelectPage({ onLanguageSelect }) {
     
     setTimeout(() => {
       onLanguageSelect(language);
-      navigate('/');
+      navigate('/hub');
     }, 300);
   };
 
@@ -85,12 +106,23 @@ export default function LanguageSelectPage({ onLanguageSelect }) {
           Explore an extensive collection of Go, Python, JavaScript, Java, C++, Rust,
           and more. Choose your language to begin exploration.
         </p>
+
+        {continueLanguage && (
+          <button
+            type="button"
+            className="btn-secondary continue-stack-btn"
+            onClick={() => navigate('/hub')}
+            style={{ margin: '0 auto 24px', display: 'block' }}
+          >
+            Continue with {continueLanguage} →
+          </button>
+        )}
       </section>
 
       {/* ── Language Selection Grid ── */}
       <section>
         <div className="section-header" style={{ justifyContent: 'center', marginBottom: '30px' }}>
-          <span className="section-title" style={{ fontSize: '1.2rem', color: 'var(--txt-1)' }}>Choose Your Stack</span>
+          <span className="section-title stack-picker-section-title" style={{ fontSize: '1.2rem' }}>Choose Your Stack</span>
         </div>
 
         <div className="lang-grid">
