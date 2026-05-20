@@ -20,6 +20,9 @@ import "./styles/responsive.css";
 const LanguageSelectPage = lazy(
   () => import("./features/language/pages/LanguageSelectPage"),
 );
+const LanguageLandingPage = lazy(
+  () => import("./features/language/pages/LanguageLandingPage"),
+);
 const HomePage = lazy(() => import("./features/docs/pages/Home/HomePage"));
 const DocumentPage = lazy(() => import("./features/docs/pages/DocumentPage"));
 const CategoryPage = lazy(() => import("./features/docs/pages/CategoryPage"));
@@ -210,10 +213,12 @@ function AppRoutes() {
   );
 
   const handleLanguageSelect = React.useCallback(
-    (language) => {
+    (language, options = {}) => {
       setSelectedLanguage(language);
       localStorage.setItem("selectedLanguage", language);
-      navigate("/hub", { replace: true });
+      if (!options.stay) {
+        navigate(`/language/${encodeURIComponent(language)}`, { replace: true });
+      }
     },
     [navigate],
   );
@@ -263,6 +268,23 @@ function AppRoutes() {
                 continueLanguage={selectedLanguage}
               />
             </StackPickerShell>
+          }
+        />
+        <Route
+          path="/language/:language"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onToggleTheme={toggleTheme}
+                onGoToStackPicker={goToStackPicker}
+              >
+                <LanguageLandingPage
+                  selectedLanguage={selectedLanguage}
+                  onLanguageSelect={handleLanguageSelect}
+                />
+              </LearnShell>
+            </ThemedShell>
           }
         />
         <Route

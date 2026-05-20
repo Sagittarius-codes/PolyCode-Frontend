@@ -620,6 +620,50 @@
   border-color: rgba(15, 23, 42, 0.1);
 }
 
+.app.theme-light .language-landing {
+  background:
+    linear-gradient(180deg, rgba(14, 165, 233, 0.08), transparent 280px),
+    #f8fafc;
+}
+
+.app.theme-light .language-landing-hero {
+  background:
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--language-color) 16%, transparent), transparent 36%),
+    #ffffff;
+  border-color: color-mix(in srgb, var(--language-color) 25%, rgba(15, 23, 42, 0.12));
+  box-shadow: var(--shadow-lg);
+}
+
+.app.theme-light .language-hero-copy h1,
+.app.theme-light .language-section-head h2,
+.app.theme-light .language-course-card h3 {
+  color: #0f172a;
+}
+
+.app.theme-light .language-hero-copy p,
+.app.theme-light .language-course-card p {
+  color: #475569;
+}
+
+.app.theme-light .language-secondary-btn {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+.app.theme-light .language-hero-icon,
+.app.theme-light .language-course-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--course-accent, var(--language-color)) 7%, transparent), transparent 48%),
+    #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+  box-shadow: var(--shadow-sm);
+}
+
+.app.theme-light .language-course-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
 /* ── Playground IDE (CodePlayground.css dark defaults) ── */
 .app.theme-light .playground-root {
   background: #f8fafc;
