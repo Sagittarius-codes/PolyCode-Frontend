@@ -289,6 +289,15 @@ export default function NumpyLessonPage() {
                     ))}
                   </ol>
                 </div>
+                <div className="oops-brief-card oops-brief-wide">
+                  <span className="oops-interactive-label">Practice</span>
+                  <h3>Before the challenge, verify these</h3>
+                  <ul>
+                    {practicePrompts.map((item) => (
+                      <li key={item.id}>{item.label}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
               {lesson.theory.map((block, index) => (
