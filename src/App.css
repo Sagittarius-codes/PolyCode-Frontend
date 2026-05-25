@@ -6622,8 +6622,56 @@ body {
   transform: translateY(-1px);
 }
 .oops-run-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
+  background: #4a4a4a;
+  color: #b0b0b0;
+  transform: none;
+}
+
+.oops-auth-gate {
+  margin: 0.85rem 0 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(255, 77, 109, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 77, 109, 0.08);
+}
+
+.oops-auth-gate p {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text-muted, #b8c0cc);
+}
+
+.oops-auth-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oops-auth-gate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid var(--border, #3a3f4b);
+  color: var(--text, #e8ecf1);
+  background: transparent;
+}
+
+.oops-auth-gate-btn-primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--vscode-blue, #007acc), #00a3ff);
+  color: #fff;
+}
+
+.oops-auth-gate-hub {
+  grid-column: 1 / -1;
 }
 
 @keyframes spin {
