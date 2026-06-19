@@ -1,16 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Boxes,
-  Layers3,
-  Grid3x3,
-  Table2,
-  Play,
-  Brain,
-  FileText,
-} from "lucide-react";
+import { ArrowRight, ChevronDown, Moon, Sun } from "lucide-react";
 
 /* ─── Course data ───────────────────────────────────────────────
    Add new courses here — they appear in the slider automatically.
