@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowRight,
-  ChevronDown,
-  Moon,
-  Sun,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowRight, ChevronDown, Moon, Sun } from "lucide-react";
 import { getLanguages } from "../../docs/services/api";
 import { ALL_COURSES as COURSES } from "../../learn/shared/allCourses";
 
