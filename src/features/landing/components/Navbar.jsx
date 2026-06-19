@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   ChevronDown,
-  Boxes,
-  Layers3,
-  Grid3x3,
-  Table2,
-  FileText,
   Moon,
   Sun,
+  ArrowRight, // keep whatever else is actually used
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { getLanguages } from "../../docs/services/api";
 import { ALL_COURSES as COURSES } from "../../learn/shared/allCourses";
