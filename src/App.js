@@ -142,9 +142,15 @@ const PageFallback = () => (
 );
 
 function AppFooter() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="app-footer">
       <div className="app-footer-inner">
+        <div className="app-footer-meta">
+          <span className="app-footer-project">PolyCode</span>
+          <span className="app-footer-copy">© {year}</span>
+        </div>
         <a
           className="app-footer-brand"
           href="https://www.quantumlogicslimited.com"
@@ -153,14 +159,13 @@ function AppFooter() {
           aria-label="Quantum Logics"
         >
           <img
-            src="https://www.quantumlogicslimited.com/logo.png"
-            alt="Quantum Logics logo"
+            src="/images/logo.png"
+            alt=""
             className="app-footer-logo"
+            aria-hidden
           />
-          <span>Quantum Logics</span>
+          <span>Powered by Quantum Logics</span>
         </a>
-        <span className="app-footer-divider" />
-        <span className="app-footer-project">Polycode</span>
       </div>
     </footer>
   );
@@ -409,30 +414,41 @@ function ProfileRedirect() {
   return <Navigate to="/hub" replace />;
 }
 
-/** Language picker is always dark — overrides global light theme on html/body */
-function StackPickerShell({ children, savedTheme }) {
+/** Language picker respects global theme (dark styling only when theme is dark). */
+function StackPickerShell({ children, savedTheme, onToggleTheme }) {
   React.useLayoutEffect(() => {
     const html = document.documentElement;
     const body = document.body;
+    const isLight = savedTheme === "light";
 
-    html.setAttribute("data-theme", "dark");
-    body.classList.remove("light-theme");
-    html.style.backgroundColor = "#03050a";
-    body.style.backgroundColor = "#03050a";
+    html.setAttribute("data-theme", savedTheme);
+    body.classList.toggle("light-theme", isLight);
+
+    if (isLight) {
+      html.style.backgroundColor = "#f8f9fb";
+      body.style.backgroundColor = "#f8f9fb";
+    } else {
+      html.style.backgroundColor = "#03050a";
+      body.style.backgroundColor = "#03050a";
+    }
 
     return () => {
       html.style.backgroundColor = "";
       body.style.backgroundColor = "";
-      // Restore the real theme when leaving the stack picker
-      html.setAttribute("data-theme", savedTheme);
-      body.classList.toggle("light-theme", savedTheme === "light");
     };
   }, [savedTheme]);
 
+  const shellClass =
+    savedTheme === "light" ? "app theme-light" : "app stack-picker-dark";
+
   return (
-    <div className="app stack-picker-dark">
-      {children}
-      <AppFooter />
+    <div className={shellClass}>
+      {React.isValidElement(children)
+        ? React.cloneElement(children, {
+            theme: savedTheme,
+            onToggleTheme,
+          })
+        : children}
     </div>
   );
 }
@@ -514,7 +530,7 @@ function AppRoutes() {
           element={
             <LandingShell
               savedTheme={theme}
-              footer={<AppFooter />}
+              onThemeChange={setTheme}
               onLanguageSelect={handleLanguageSelect}
               continueLanguage={selectedLanguage}
             />
@@ -539,7 +555,7 @@ function AppRoutes() {
         <Route
           path="/select-language"
           element={
-            <StackPickerShell savedTheme={theme}>
+            <StackPickerShell savedTheme={theme} onToggleTheme={toggleTheme}>
               <LandingPage
                 onLanguageSelect={handleLanguageSelect}
                 continueLanguage={selectedLanguage}
