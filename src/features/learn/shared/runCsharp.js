@@ -146,362 +146,203 @@ export async function runCsharpCode(source) {
 
 // ---------------------------------------------------------------------------
 // Safe expression evaluator — no eval / Function constructor
-// Supports: string literals, number literals, bool literals, variable refs,
-// and binary operators: +  -  *  /  %  (left-to-right, no precedence climbing
-// needed for the simple expressions C# beginners write).
+// Recursive-descent parser supporting: string/number/boolean literals,
+// variable references, parentheses, unary +/-, and binary operators with
+// correct precedence (*, /, % before +, -).
 // ---------------------------------------------------------------------------
 
-/**
-<<<<<<< HEAD
- * Tokenise an expression string into an array of typed tokens.
- * Token types: 'string' | 'number' | 'boolean' | 'null' | 'identifier' | 'op'
- */
-function tokenize(expr) {
-  const tokens = [];
-  let i = 0;
-
-  while (i < expr.length) {
-    // Skip whitespace
-    if (/\s/.test(expr[i])) {
-      i++;
-      continue;
-    }
-
-    // String literal  "..."
-    if (expr[i] === '"') {
-      let j = i + 1;
-      let str = "";
-      while (j < expr.length && expr[j] !== '"') {
-        if (expr[j] === "\\") {
-          j++;
-          str += expr[j] ?? "";
-        } else {
-          str += expr[j];
-        }
-        j++;
-      }
-      tokens.push({ type: "string", value: str });
-      i = j + 1;
-      continue;
-    }
-
-    // Char literal  '.'
-    if (expr[i] === "'") {
-      const ch = expr[i + 1] === "\\" ? expr[i + 2] : expr[i + 1];
-      tokens.push({ type: "string", value: ch });
-      i += expr[i + 1] === "\\" ? 4 : 3;
-      continue;
-    }
-
-    // Number literal (int or double)
-    if (
-      /[0-9]/.test(expr[i]) ||
-      (expr[i] === "-" && /[0-9]/.test(expr[i + 1] ?? ""))
-    ) {
-      let j = i;
-      if (expr[j] === "-") j++;
-      while (j < expr.length && /[0-9.]/.test(expr[j])) j++;
-      tokens.push({ type: "number", value: parseFloat(expr.slice(i, j)) });
-      i = j;
-      continue;
-    }
-
-    // Identifier / keyword
-    if (/[a-zA-Z_]/.test(expr[i])) {
-      let j = i;
-      while (j < expr.length && /[a-zA-Z0-9_]/.test(expr[j])) j++;
-      const word = expr.slice(i, j);
-      if (word === "true") {
-        tokens.push({ type: "boolean", value: true });
-      } else if (word === "false") {
-        tokens.push({ type: "boolean", value: false });
-      } else if (word === "null") {
-        tokens.push({ type: "null", value: null });
-      } else {
-        tokens.push({ type: "identifier", value: word });
-      }
-      i = j;
-      continue;
-    }
-
-    // Operator
-    if (/[+\-*/%]/.test(expr[i])) {
-      tokens.push({ type: "op", value: expr[i] });
-      i++;
-      continue;
-    }
-
-    // Unknown character — skip gracefully
-    i++;
-  }
-
-  return tokens;
-}
-
-/**
- * Resolve a single token to its runtime value, substituting variables.
- */
-function resolveToken(token, variables) {
-  if (token.type === "identifier") {
-    if (!(token.value in variables)) {
-      throw new Error(
-        `The name '${token.value}' does not exist in the current context`,
-      );
-    }
-    return variables[token.value];
-  }
-  return token.value;
-}
-
-/**
- * Apply a binary operator to two already-resolved values.
- */
-function applyOp(op, left, right) {
-  switch (op) {
-    case "+":
-      return left + right; // works for both numbers and strings (concatenation)
-    case "-":
-      return left - right;
-    case "*":
-      return left * right;
-    case "/": {
-      if (right === 0) throw new Error("DivideByZeroException");
-      return left / right;
-    }
-    case "%":
-      return left % right;
-    default:
-      throw new Error(`Unknown operator: ${op}`);
-  }
-}
-
-/**
- * Evaluate an expression string safely without eval or Function().
- * Handles literals, variable references, and left-to-right binary operations.
- */
 function evaluateExpression(expr, variables) {
   // Fast path: plain string literal
   if (expr.startsWith('"') && expr.endsWith('"')) {
     return expr.slice(1, -1);
   }
 
-  const tokens = tokenize(expr);
+  const parser = new SafeExpressionParser(expr, variables);
+  return parser.parse();
+}
 
-  if (tokens.length === 0) {
-    throw new Error(`Invalid expression syntax: ${expr}`);
+class SafeExpressionParser {
+  constructor(expr, variables) {
+    this.expr = expr;
+    this.variables = variables;
+    this.tokens = tokenizeExpression(expr);
+    this.index = 0;
   }
 
-  // Single token — no operators
-  if (tokens.length === 1) {
-    return resolveToken(tokens[0], variables);
+  parse() {
+    const value = this.parseAddition();
+    if (!this.isAtEnd()) {
+      throw new Error(`Unexpected token '${this.peek().value}'`);
+    }
+    return value;
   }
 
-  // Reduce left-to-right: value op value op value ...
-  // tokens must alternate: value, op, value, op, value
-  let result = resolveToken(tokens[0], variables);
+  parseAddition() {
+    let value = this.parseMultiplication();
 
-  for (let i = 1; i < tokens.length; i += 2) {
-    const opToken = tokens[i];
-    const rightToken = tokens[i + 1];
-
-    if (!opToken || opToken.type !== "op") {
-      throw new Error(`Invalid expression syntax: ${expr}`);
+    while (this.match("+", "-")) {
+      const operator = this.previous().value;
+      const right = this.parseMultiplication();
+      if (operator === "+") {
+        value =
+          typeof value === "string" || typeof right === "string"
+            ? `${value}${right}`
+            : value + right;
+      } else {
+        value = toNumber(value) - toNumber(right);
+      }
     }
-    if (!rightToken) {
-      throw new Error(`Invalid expression syntax: ${expr}`);
-    }
 
-    const right = resolveToken(rightToken, variables);
-    result = applyOp(opToken.value, result, right);
+    return value;
   }
 
-  return result;
-  function evaluateExpression(expr, variables) {
-    const parser = new SafeExpressionParser(expr, variables);
-    return parser.parse();
+  parseMultiplication() {
+    let value = this.parseUnary();
+
+    while (this.match("*", "/", "%")) {
+      const operator = this.previous().value;
+      const right = toNumber(this.parseUnary());
+      const left = toNumber(value);
+      if (operator === "*") value = left * right;
+      else if (operator === "/") {
+        if (right === 0) throw new Error("DivideByZeroException");
+        value = left / right;
+      } else value = left % right;
+    }
+
+    return value;
   }
 
-  class SafeExpressionParser {
-    constructor(expr, variables) {
-      this.expr = expr;
-      this.variables = variables;
-      this.tokens = tokenizeExpression(expr);
-      this.index = 0;
+  parseUnary() {
+    if (this.match("-")) return -toNumber(this.parseUnary());
+    if (this.match("+")) return toNumber(this.parseUnary());
+    return this.parsePrimary();
+  }
+
+  parsePrimary() {
+    if (this.matchType("number", "string", "boolean")) {
+      return this.previous().value;
     }
 
-    parse() {
-      const value = this.parseAddition();
-      if (!this.isAtEnd()) {
-        throw new Error(`Unexpected token '${this.peek().value}'`);
+    if (this.matchType("identifier")) {
+      const name = this.previous().value;
+      if (Object.prototype.hasOwnProperty.call(this.variables, name)) {
+        return this.variables[name];
       }
-      return value;
-    }
-
-    parseAddition() {
-      let value = this.parseMultiplication();
-
-      while (this.match("+", "-")) {
-        const operator = this.previous().value;
-        const right = this.parseMultiplication();
-        if (operator === "+") {
-          value =
-            typeof value === "string" || typeof right === "string"
-              ? `${value}${right}`
-              : value + right;
-        } else {
-          value = toNumber(value) - toNumber(right);
-        }
-      }
-
-      return value;
-    }
-
-    parseMultiplication() {
-      let value = this.parseUnary();
-
-      while (this.match("*", "/", "%")) {
-        const operator = this.previous().value;
-        const right = toNumber(this.parseUnary());
-        const left = toNumber(value);
-        if (operator === "*") value = left * right;
-        else if (operator === "/") value = left / right;
-        else value = left % right;
-      }
-
-      return value;
-    }
-
-    parseUnary() {
-      if (this.match("-")) return -toNumber(this.parseUnary());
-      if (this.match("+")) return toNumber(this.parseUnary());
-      return this.parsePrimary();
-    }
-
-    parsePrimary() {
-      if (this.matchType("number", "string", "boolean")) {
-        return this.previous().value;
-      }
-
-      if (this.matchType("identifier")) {
-        const name = this.previous().value;
-        if (Object.prototype.hasOwnProperty.call(this.variables, name)) {
-          return this.variables[name];
-        }
-        throw new Error(
-          `The name '${name}' does not exist in the current context`,
-        );
-      }
-
-      if (this.match("(")) {
-        const value = this.parseAddition();
-        if (!this.match(")")) throw new Error("Missing closing parenthesis");
-        return value;
-      }
-
       throw new Error(
-        `Unexpected token '${this.peek()?.value || "end of expression"}'`,
+        `The name '${name}' does not exist in the current context`,
       );
     }
 
-    match(...values) {
-      if (this.isAtEnd()) return false;
-      if (!values.includes(this.peek().value)) return false;
-      this.index += 1;
-      return true;
+    if (this.match("(")) {
+      const value = this.parseAddition();
+      if (!this.match(")")) throw new Error("Missing closing parenthesis");
+      return value;
     }
 
-    matchType(...types) {
-      if (this.isAtEnd()) return false;
-      if (!types.includes(this.peek().type)) return false;
-      this.index += 1;
-      return true;
-    }
-
-    previous() {
-      return this.tokens[this.index - 1];
-    }
-
-    peek() {
-      return this.tokens[this.index];
-    }
-
-    isAtEnd() {
-      return this.index >= this.tokens.length;
-    }
+    throw new Error(
+      `Unexpected token '${this.peek()?.value || "end of expression"}'`,
+    );
   }
 
-  function tokenizeExpression(expr) {
-    const tokens = [];
-    let index = 0;
-
-    while (index < expr.length) {
-      const char = expr[index];
-
-      if (/\s/.test(char)) {
-        index += 1;
-        continue;
-      }
-
-      if ('"'.includes(char)) {
-        let value = "";
-        index += 1;
-        while (index < expr.length && expr[index] !== '"') {
-          if (expr[index] === "\\" && index + 1 < expr.length) {
-            const escaped = expr[index + 1];
-            value += escaped === "n" ? "\n" : escaped === "t" ? "\t" : escaped;
-            index += 2;
-          } else {
-            value += expr[index];
-            index += 1;
-          }
-        }
-        if (expr[index] !== '"') throw new Error("Unterminated string literal");
-        tokens.push({ type: "string", value });
-        index += 1;
-        continue;
-      }
-
-      if (/[0-9.]/.test(char)) {
-        const match = expr.slice(index).match(/^\d+(?:\.\d+)?/);
-        if (!match)
-          throw new Error(`Invalid number near '${expr.slice(index)}'`);
-        tokens.push({ type: "number", value: Number(match[0]) });
-        index += match[0].length;
-        continue;
-      }
-
-      if (/[A-Za-z_]/.test(char)) {
-        const match = expr.slice(index).match(/^[A-Za-z_][A-Za-z0-9_]*/);
-        const value = match[0];
-        if (value === "true" || value === "false") {
-          tokens.push({ type: "boolean", value: value === "true" });
-        } else {
-          tokens.push({ type: "identifier", value });
-        }
-        index += value.length;
-        continue;
-      }
-
-      if ("+-*/%()".includes(char)) {
-        tokens.push({ type: "operator", value: char });
-        index += 1;
-        continue;
-      }
-
-      throw new Error(`Unsupported character '${char}'`);
-    }
-
-    return tokens;
+  match(...values) {
+    if (this.isAtEnd()) return false;
+    if (!values.includes(this.peek().value)) return false;
+    this.index += 1;
+    return true;
   }
 
-  function toNumber(value) {
-    const number = Number(value);
-    if (!Number.isFinite(number)) {
-      throw new Error(`Expected a number but got '${value}'`);
-    }
-    return number;
+  matchType(...types) {
+    if (this.isAtEnd()) return false;
+    if (!types.includes(this.peek().type)) return false;
+    this.index += 1;
+    return true;
+  }
+
+  previous() {
+    return this.tokens[this.index - 1];
+  }
+
+  peek() {
+    return this.tokens[this.index];
+  }
+
+  isAtEnd() {
+    return this.index >= this.tokens.length;
   }
 }
+
+function tokenizeExpression(expr) {
+  const tokens = [];
+  let index = 0;
+
+  while (index < expr.length) {
+    const char = expr[index];
+
+    if (/\s/.test(char)) {
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      let value = "";
+      index += 1;
+      while (index < expr.length && expr[index] !== '"') {
+        if (expr[index] === "\\" && index + 1 < expr.length) {
+          const escaped = expr[index + 1];
+          value += escaped === "n" ? "\n" : escaped === "t" ? "\t" : escaped;
+          index += 2;
+        } else {
+          value += expr[index];
+          index += 1;
+        }
+      }
+      if (expr[index] !== '"') throw new Error("Unterminated string literal");
+      tokens.push({ type: "string", value });
+      index += 1;
+      continue;
+    }
+
+    if (/[0-9.]/.test(char)) {
+      const match = expr.slice(index).match(/^\d+(?:\.\d+)?/);
+      if (!match) throw new Error(`Invalid number near '${expr.slice(index)}'`);
+      tokens.push({ type: "number", value: Number(match[0]) });
+      index += match[0].length;
+      continue;
+    }
+
+    if (/[A-Za-z_]/.test(char)) {
+      const match = expr.slice(index).match(/^[A-Za-z_][A-Za-z0-9_]*/);
+      const value = match[0];
+      if (value === "true" || value === "false") {
+        tokens.push({ type: "boolean", value: value === "true" });
+      } else {
+        tokens.push({ type: "identifier", value });
+      }
+      index += value.length;
+      continue;
+    }
+
+    if ("+-*/%()".includes(char)) {
+      tokens.push({ type: "operator", value: char });
+      index += 1;
+      continue;
+    }
+
+    throw new Error(`Unsupported character '${char}'`);
+  }
+
+  return tokens;
+}
+
+function toNumber(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    throw new Error(`Expected a number but got '${value}'`);
+  }
+  return number;
+}
+
 export function formatCsharpOutput(result) {
   return result?.stdout || "";
 }
