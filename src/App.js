@@ -12,7 +12,7 @@ import VerifyCertificatePage from "./features/learn/shared/VerifyCertificatePage
 import Navbar from "./features/navigation/components/Navbar";
 import Sidebar from "./features/navigation/components/Sidebar";
 import { PlaygroundProvider } from "./features/playground/context/PlaygroundContext";
-import { AuthProvider } from "./features/auth/context/AuthContext";
+import { AuthProvider, useAuth } from "./features/auth/context/AuthContext";
 import SelectionPins from "./shared/components/SelectionPins";
 import { LearnNavProvider } from "./features/learn/shared/LearnNavContext";
 import GlobalAssistant from "./features/assistant/components/GlobalAssistant";
@@ -24,37 +24,68 @@ import "./styles/responsive.css";
 
 import LandingShell from "./features/landing/LandingShell";
 
-const LandingPage = lazy(() => import("./features/landing/pages/LandingPage"));
-const LanguageLandingPage = lazy(
+function lazyWithChunkRetry(importer) {
+  return lazy(() =>
+    importer()
+      .then((module) => {
+        sessionStorage.removeItem("polycode_chunk_reload");
+        return module;
+      })
+      .catch((error) => {
+        const message = error?.message || "";
+        const isChunkError =
+          error?.name === "ChunkLoadError" ||
+          /Loading chunk .* failed|Failed to fetch dynamically imported module/i.test(
+            message,
+          );
+
+        if (
+          isChunkError &&
+          typeof window !== "undefined" &&
+          sessionStorage.getItem("polycode_chunk_reload") !== "1"
+        ) {
+          sessionStorage.setItem("polycode_chunk_reload", "1");
+          window.location.reload();
+          return new Promise(() => {});
+        }
+
+        throw error;
+      }),
+  );
+}
+
+const LandingPage = lazyWithChunkRetry(() => import("./features/landing/pages/LandingPage"));
+const LanguageLandingPage = lazyWithChunkRetry(
   () => import("./features/language/pages/LanguageLandingPage"),
 );
-const HomePage = lazy(() => import("./features/docs/pages/Home/HomePage"));
-const DocumentPage = lazy(() => import("./features/docs/pages/DocumentPage"));
-const CategoryPage = lazy(() => import("./features/docs/pages/CategoryPage"));
-const SearchPage = lazy(() => import("./features/docs/pages/SearchPage"));
-const PlaygroundPage = lazy(
+const HomePage = lazyWithChunkRetry(() => import("./features/docs/pages/Home/HomePage"));
+const DocumentPage = lazyWithChunkRetry(() => import("./features/docs/pages/DocumentPage"));
+const CategoryPage = lazyWithChunkRetry(() => import("./features/docs/pages/CategoryPage"));
+const SearchPage = lazyWithChunkRetry(() => import("./features/docs/pages/SearchPage"));
+const PlaygroundPage = lazyWithChunkRetry(
   () => import("./features/playground/pages/PlaygroundPage"),
 );
-const LoginPage = lazy(() => import("./features/auth/pages/LoginPage"));
-const SignupPage = lazy(() => import("./features/auth/pages/SignupPage"));
-const DailyChallenge = lazy(() => import("./pages/DailyChallenges"));
-const ProfilePage = lazy(() => import("./features/profile/ProfilePage"));
+const LoginPage = lazyWithChunkRetry(() => import("./features/auth/pages/LoginPage"));
+const SignupPage = lazyWithChunkRetry(() => import("./features/auth/pages/SignupPage"));
+const DailyChallenge = lazyWithChunkRetry(() => import("./pages/DailyChallenges"));
+const ProfilePage = lazyWithChunkRetry(() => import("./features/profile/ProfilePage"));
 
 // Learn — OOP C++ pages
-const OopsHub = lazy(() => import("./features/learn/oops-cpp/pages/OopsHub"));
-const LessonPage = lazy(
+const OopsHub = lazyWithChunkRetry(() => import("./features/learn/oops-cpp/pages/OopsHub"));
+const LessonPage = lazyWithChunkRetry(
   () => import("./features/learn/oops-cpp/pages/LessonPage"),
 );
-const PointersHub = lazy(
+const PointersHub = lazyWithChunkRetry(
   () => import("./features/learn/pointers-cpp/pages/PointersHub"),
 );
-const PointersLessonPage = lazy(
+const PointersLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/pointers-cpp/pages/PointersLessonPage"),
 );
-const NumpyHub = lazy(() => import("./features/learn/numpy-py/pages/NumpyHub"));
-const NumpyLessonPage = lazy(
+const NumpyHub = lazyWithChunkRetry(() => import("./features/learn/numpy-py/pages/NumpyHub"));
+const NumpyLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/numpy-py/pages/NumpyLessonPage"),
 );
+<<<<<<< HEAD
 const MatplotlibHub = lazy(
   () => import("./features/learn/matplotlib-py/pages/MatplotlibHub"),
 );
@@ -62,22 +93,25 @@ const MatplotlibLessonPage = lazy(
   () => import("./features/learn/matplotlib-py/pages/MatplotlibLessonPage"),
 );
 const PandasHub = lazy(
+=======
+const PandasHub = lazyWithChunkRetry(
+>>>>>>> dba4fce096a98baa63529dfde20143e058b87e7e
   () => import("./features/learn/pandas-py/pages/PandasHub"),
 );
-const PandasLessonPage = lazy(
+const PandasLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/pandas-py/pages/PandasLessonPage"),
 );
-const JsFundamentalsHub = lazy(
+const JsFundamentalsHub = lazyWithChunkRetry(
   () => import("./features/learn/js-fundamentals/pages/JsFundamentalsHub"),
 );
-const JsFundamentalsLessonPage = lazy(
+const JsFundamentalsLessonPage = lazyWithChunkRetry(
   () =>
     import("./features/learn/js-fundamentals/pages/JsFundamentalsLessonPage"),
 );
-const CsharpHub = lazy(
+const CsharpHub = lazyWithChunkRetry(
   () => import("./features/learn/csharp-fundamentals/pages/CsharpHub"),
 );
-const CsharpLessonPage = lazy(
+const CsharpLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/csharp-fundamentals/pages/CsharpLessonPage"),
 );
 
@@ -289,6 +323,47 @@ function LearnShell({
   );
 }
 
+function ProfileOrMainFallback({
+  theme,
+  onToggleTheme,
+  onGoToStackPicker,
+  selectedLanguage,
+  onLanguageSelect,
+}) {
+  const location = useLocation();
+
+  if (/^\/@[^/]+$/.test(location.pathname)) {
+    return (
+      <ThemedShell theme={theme}>
+        <LearnShell
+          theme={theme}
+          onToggleTheme={onToggleTheme}
+          onGoToStackPicker={onGoToStackPicker}
+          selectedLanguage={selectedLanguage}
+        >
+          <ProfilePage />
+        </LearnShell>
+      </ThemedShell>
+    );
+  }
+
+  return (
+    <ThemedShell theme={theme}>
+      {selectedLanguage ? (
+        <MainApp
+          selectedLanguage={selectedLanguage}
+          onLanguageSelect={onLanguageSelect}
+          onGoToStackPicker={onGoToStackPicker}
+          theme={theme}
+          onToggleTheme={onToggleTheme}
+        />
+      ) : (
+        <Navigate to="/select-language" replace />
+      )}
+    </ThemedShell>
+  );
+}
+
 function ThemedShell({ theme, children }) {
   return (
     <div className={`app ${theme === "light" ? "theme-light" : ""}`}>
@@ -296,6 +371,24 @@ function ThemedShell({ theme, children }) {
       <AppFooter />
     </div>
   );
+}
+
+function ProfileRedirect() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <PageFallback />;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.username) {
+    return <Navigate to={`/@${user.username}`} replace />;
+  }
+
+  return <Navigate to="/hub" replace />;
 }
 
 /** Language picker is always dark — overrides global light theme on html/body */
@@ -744,35 +837,18 @@ function AppRoutes() {
         />
         <Route
           path="/profile"
-          element={
-            <ThemedShell theme={theme}>
-              <LearnShell
-                theme={theme}
-                onToggleTheme={toggleTheme}
-                onGoToStackPicker={goToStackPicker}
-                selectedLanguage={selectedLanguage}
-              >
-                <ProfilePage />
-              </LearnShell>
-            </ThemedShell>
-          }
+          element={<ProfileRedirect />}
         />
         <Route
           path="/*"
           element={
-            <ThemedShell theme={theme}>
-              {selectedLanguage ? (
-                <MainApp
-                  selectedLanguage={selectedLanguage}
-                  onLanguageSelect={handleLanguageSelect}
-                  onGoToStackPicker={goToStackPicker}
-                  theme={theme}
-                  onToggleTheme={toggleTheme}
-                />
-              ) : (
-                <Navigate to="/select-language" replace />
-              )}
-            </ThemedShell>
+            <ProfileOrMainFallback
+              theme={theme}
+              onToggleTheme={toggleTheme}
+              onGoToStackPicker={goToStackPicker}
+              selectedLanguage={selectedLanguage}
+              onLanguageSelect={handleLanguageSelect}
+            />
           }
         />
       </Routes>

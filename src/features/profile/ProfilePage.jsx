@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../auth/context/AuthContext";
+import { rememberSignedInUser } from "../../lib/authSession";
 import ProfileEditSection from "./components/ProfileEditSection";
 import ProfileHero from "./components/ProfileHero";
 import { ALL_LESSONS, TOTAL_XP } from "../learn/oops-cpp/data/oopsCurriculum";
@@ -20,6 +21,8 @@ import {
   PANDAS_TOTAL_XP,
 } from "../learn/pandas-py/data/pandasCurriculum";
 import usePandasProgress from "../learn/pandas-py/hooks/usePandasProgress";
+import CourseCertificate from "../learn/shared/CourseCertificate";
+import { getProfileByUsername } from "./services/profileApi";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_ACTIVITY_DAYS = 30;
@@ -209,9 +212,43 @@ function TrackProgressCard({
   );
 }
 
+function getCompletedTrackCertificate(track) {
+  const completedCount = Object.keys(track.progress).length;
+  if (completedCount < track.lessons.length) return null;
+
+  const earnedXP = track.lessons
+    .filter((lesson) => track.progress[lesson.id])
+    .reduce((sum, lesson) => sum + lesson.xp, 0);
+
+  return {
+    ...track,
+    completedCount,
+    earnedXP,
+  };
+}
+
 export default function ProfilePage() {
-  const { user, isAuthenticated } = useAuth();
+  const { username } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isAuthenticated, loading } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
+  const [publicUser, setPublicUser] = React.useState(null);
+  const [profileLoading, setProfileLoading] = React.useState(false);
+  const [profileError, setProfileError] = React.useState("");
+  const pathUsername = location.pathname.match(/^\/@([^/]+)$/)?.[1];
+  const routeUsername = (username || pathUsername)
+    ?.replace(/^@/, "")
+    .trim()
+    .toLowerCase();
+  const signedInUsername = user?.username?.toLowerCase();
+  const isOwnProfile =
+    isAuthenticated &&
+    user &&
+    (!routeUsername ||
+      (signedInUsername && routeUsername === signedInUsername) ||
+      !signedInUsername);
+  const profileUser = isOwnProfile ? user : publicUser;
   const oops = useOopsProgress();
   const pointers = usePointersProgress();
   const numpy = useNumpyProgress();
@@ -248,6 +285,78 @@ export default function ProfilePage() {
       pandas.completedMap,
     ],
   );
+  const completedCertificates = [
+    getCompletedTrackCertificate({
+      courseName: "OOPs C++",
+      lessons: ALL_LESSONS,
+      totalXP: TOTAL_XP,
+      progress: oops.completedMap,
+    }),
+    getCompletedTrackCertificate({
+      courseName: "Pointers C++",
+      lessons: POINTER_LESSONS,
+      totalXP: POINTER_TOTAL_XP,
+      progress: pointers.completedMap,
+    }),
+    getCompletedTrackCertificate({
+      courseName: "NumPy for Python",
+      lessons: NUMPY_LESSONS,
+      totalXP: NUMPY_TOTAL_XP,
+      progress: numpy.completedMap,
+    }),
+    getCompletedTrackCertificate({
+      courseName: "Pandas for Python",
+      lessons: PANDAS_LESSONS,
+      totalXP: PANDAS_TOTAL_XP,
+      progress: pandas.completedMap,
+    }),
+  ].filter(Boolean);
+
+  React.useEffect(() => {
+    if (!isAuthenticated || !user?.username || !routeUsername) return;
+    if (routeUsername === user.username.toLowerCase()) {
+      rememberSignedInUser(user);
+      return;
+    }
+
+    const storedPath = localStorage.getItem("profilePath");
+    if (
+      storedPath &&
+      storedPath.toLowerCase() === location.pathname.toLowerCase()
+    ) {
+      navigate(`/@${user.username}`, { replace: true });
+    }
+  }, [isAuthenticated, user, routeUsername, location.pathname, navigate]);
+
+  React.useEffect(() => {
+    if (!routeUsername || routeUsername === signedInUsername) {
+      setPublicUser(null);
+      setProfileError("");
+      return undefined;
+    }
+
+    let cancelled = false;
+    setProfileLoading(true);
+    setProfileError("");
+
+    getProfileByUsername(routeUsername)
+      .then((data) => {
+        if (!cancelled) setPublicUser(data.user);
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setPublicUser(null);
+          setProfileError(error.message || "Profile not found");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setProfileLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [routeUsername, signedInUsername]);
 
   React.useEffect(() => {
     const node = activityWrapRef.current;
@@ -273,20 +382,44 @@ export default function ProfilePage() {
     };
   }, []);
 
+  if (loading || profileLoading) {
+    return (
+      <main className="profile-page">
+        <section className="profile-empty-state">
+          <h1>Loading profile...</h1>
+        </section>
+      </main>
+    );
+  }
+
+  if (profileError || !profileUser) {
+    return (
+      <main className="profile-page">
+        <section className="profile-empty-state">
+          <h1>Profile not found</h1>
+          <p>{profileError || "This user does not exist or is not active."}</p>
+          <Link to="/">Go home</Link>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="profile-page">
       <ProfileHero
-        user={user}
-        isAuthenticated={isAuthenticated}
+        user={profileUser}
+        isAuthenticated={isAuthenticated && isOwnProfile}
         totalStreak={totalStreak}
         editOpen={editOpen}
         onToggleEdit={() => setEditOpen((open) => !open)}
       />
 
-      <ProfileEditSection
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
-      />
+      {isOwnProfile && (
+        <ProfileEditSection
+          open={editOpen}
+          onClose={() => setEditOpen(false)}
+        />
+      )}
 
       <section className="profile-overview-grid">
         <div>
@@ -356,6 +489,27 @@ export default function ProfilePage() {
           accent="#059669"
         />
       </div>
+
+      {completedCertificates.length > 0 && (
+        <section className="profile-certificates-section">
+          <div className="profile-section-heading">
+            <span>Certificates</span>
+            <h2>Your completed course certificates</h2>
+          </div>
+          <div className="profile-certificates-list">
+            {completedCertificates.map((certificate) => (
+              <CourseCertificate
+                key={certificate.courseName}
+                courseName={certificate.courseName}
+                totalLessons={certificate.lessons.length}
+                completedCount={certificate.completedCount}
+                earnedXP={certificate.earnedXP}
+                totalXP={certificate.totalXP}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
