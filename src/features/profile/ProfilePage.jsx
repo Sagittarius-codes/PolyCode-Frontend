@@ -239,7 +239,7 @@ export default function ProfilePage() {
   const { username } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, loading } = useAuth();
+  const { user, token, isAuthenticated, loading } = useAuth();
   const [editOpen, setEditOpen] = React.useState(false);
   const [publicUser, setPublicUser] = React.useState(null);
   const [profileLoading, setProfileLoading] = React.useState(false);
