@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import RunnableCodeBlock from "../../shared/RunnableCodeBlock";
 import LessonReadGate from "../../shared/LessonReadGate";
 
-function plainText(text = "") {
-  return text.replace(/\*\*/g, "").replace(/`/g, "");
-}
-
 function InlineText({ text }) {
   const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
   return (
