@@ -186,6 +186,32 @@ export async function runSQL(code) {
 let pyodideInstance = null;
 let pyodideLoading = false;
 const pyodideLoadedPackages = new Set();
+let matplotlibPyodideReady = false;
+
+const MATPLOTLIB_PYODIDE_SETUP = `
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import io, base64
+
+if "_POLYCODE_FIGURES" not in globals():
+    _POLYCODE_FIGURES = []
+
+def _polycode_clear_figures():
+    global _POLYCODE_FIGURES
+    _POLYCODE_FIGURES = []
+
+def _polycode_capture_show(*args, **kwargs):
+    import matplotlib.pyplot as plt
+    fig = plt.gcf()
+    if fig.get_axes():
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches="tight", dpi=110)
+        _POLYCODE_FIGURES.append(base64.b64encode(buf.getvalue()).decode("ascii"))
+    plt.close(fig)
+
+plt.show = _polycode_capture_show
+`;
 
 const PYTHON_STDLIB_PREFIXES = [
   'math', 'random', 'datetime', 'time', 'sys', 'os', 'json', 're',
@@ -244,6 +270,30 @@ class _Cap(io.StringIO):
 sys.stdout = _Cap()
 sys.stderr = _Cap()
 `);
+}
+
+function codeUsesMatplotlib(source = '') {
+  return /(?:^|\n)\s*(?:import|from)\s+matplotlib\b/m.test(source) ||
+    /\bmatplotlib\.pyplot\b/.test(source) ||
+    /\bplt\.(?:show|plot|scatter|bar|hist|pie|subplots|figure|savefig|annotate)\s*\(/.test(source);
+}
+
+async function ensureMatplotlibPyodideSetup(py) {
+  if (matplotlibPyodideReady) return;
+  await py.loadPackage('matplotlib');
+  pyodideLoadedPackages.add('matplotlib');
+  py.runPython(MATPLOTLIB_PYODIDE_SETUP);
+  matplotlibPyodideReady = true;
+}
+
+function extractPyodidePlotImages(py) {
+  try {
+    const raw = py.runPython('__import__("json").dumps(_POLYCODE_FIGURES)');
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+  } catch {
+    return [];
+  }
 }
 
 async function ensurePyodide() {
@@ -305,7 +355,14 @@ export async function runPython(code, stdin = '') {
 
     const py = await ensurePyodide();
     await ensurePyodidePackages(py, code);
+    const usesMatplotlib = codeUsesMatplotlib(code);
+    if (usesMatplotlib) {
+      await ensureMatplotlibPyodideSetup(py);
+    }
     resetPyodideIO(py);
+    if (usesMatplotlib && matplotlibPyodideReady) {
+      py.runPython('_polycode_clear_figures()');
+    }
     
     let error = null;
     try {
@@ -316,8 +373,10 @@ export async function runPython(code, stdin = '') {
     
     const stdout = py.runPython('sys.stdout.getvalue()');
     const stderr = py.runPython('sys.stderr.getvalue()');
+    const plotImages =
+      usesMatplotlib && matplotlibPyodideReady ? extractPyodidePlotImages(py) : [];
     
-    return { stdout, stderr, error };
+    return { stdout, stderr, error, plotImages };
   } catch (e) {
     return err(`Python Error: ${e.message}`);
   }

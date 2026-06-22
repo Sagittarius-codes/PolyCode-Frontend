@@ -58,8 +58,61 @@
 .app.theme-light .oops-resume-panel,
 .app.theme-light .oops-tool-panel,
 .app.theme-light .oops-chapter-card,
+.app.theme-light .matplotlib-path-card,
 .app.theme-light .profile-certificate-card {
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.app.theme-light .matplotlib-path-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.app.theme-light .matplotlib-path-summary {
+  color: #475569;
+}
+
+.app.theme-light .matplotlib-path-chapters li {
+  color: #64748b;
+}
+
+.app.theme-light .matplotlib-path-cta {
+  color: #0f172a;
+}
+
+.app.theme-light .matplotlib-prerequisites {
+  background: #f8fafc;
+  border-color: #bbf7d0;
+}
+
+.app.theme-light .matplotlib-prereq-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.app.theme-light .matplotlib-prereq-card strong {
+  color: #0f172a;
+}
+
+.app.theme-light .matplotlib-prereq-card p,
+.app.theme-light .matplotlib-runtime-note {
+  color: #64748b;
+}
+
+.app.theme-light .lesson-objectives,
+.app.theme-light .lesson-scenario {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.app.theme-light .lesson-objectives strong,
+.app.theme-light .lesson-scenario strong {
+  color: #0f172a;
+}
+
+.app.theme-light .lesson-objectives li,
+.app.theme-light .lesson-scenario p {
+  color: #475569;
 }
 
 .app.theme-classic {

@@ -7328,6 +7328,42 @@ body {
   white-space: pre-wrap;
 }
 
+.oops-output-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.oops-plot-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.oops-plot-frame {
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.oops-plot-frame img {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.app.theme-light .oops-plot-frame {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
 .oops-output-running .oops-output-body {
   color: var(--vscode-blue-2, #3794ff);
 }
@@ -7771,6 +7807,294 @@ body {
     rgba(77, 171, 207, 0.1) 0%,
     transparent 70%
   );
+}
+
+.matplotlib-hub .matplotlib-hero {
+  background:
+    linear-gradient(135deg, rgba(35, 145, 32, 0.2), transparent 48%),
+    linear-gradient(180deg, rgba(74, 222, 128, 0.08), transparent 60%),
+    var(--vscode-panel, #252526);
+}
+
+.matplotlib-hub .oops-hero-accent {
+  color: #4ade80;
+}
+
+.matplotlib-hub .matplotlib-hero::before {
+  background: radial-gradient(
+    circle,
+    rgba(35, 145, 32, 0.14) 0%,
+    transparent 70%
+  );
+}
+
+.matplotlib-learn-path {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 0 2rem;
+}
+
+.matplotlib-path-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.25rem 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.matplotlib-path-label span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4ade80;
+}
+
+.matplotlib-path-label small {
+  font-size: 0.75rem;
+  color: var(--txt-3, #6e7891);
+}
+
+.matplotlib-path-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.875rem;
+}
+
+.matplotlib-path-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem 1.05rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--stage-color) 12%, transparent), transparent 55%),
+    rgba(255, 255, 255, 0.025);
+}
+
+.matplotlib-path-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.matplotlib-path-level {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--stage-color);
+}
+
+.matplotlib-path-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--txt-2, #9aa3bc);
+}
+
+.matplotlib-path-summary {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--txt-1, #c0c8e0);
+}
+
+.matplotlib-path-chapters {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.matplotlib-path-chapters li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  color: var(--txt-2, #9aa3bc);
+}
+
+.matplotlib-path-cta {
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--stage-color) 35%, transparent);
+  background: color-mix(in srgb, var(--stage-color) 10%, transparent);
+  color: var(--txt-0, #f0f0ff);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.matplotlib-path-cta:hover {
+  background: color-mix(in srgb, var(--stage-color) 18%, transparent);
+  border-color: color-mix(in srgb, var(--stage-color) 50%, transparent);
+}
+
+@media (max-width: 1100px) {
+  .matplotlib-path-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .matplotlib-path-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matplotlib-prerequisites {
+  margin: 0 0 2rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 14px;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  background:
+    linear-gradient(135deg, rgba(35, 145, 32, 0.1), transparent 55%),
+    rgba(255, 255, 255, 0.02);
+}
+
+.matplotlib-prerequisites-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.matplotlib-prerequisites-head span {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4ade80;
+}
+
+.matplotlib-prerequisites-head small {
+  font-size: 0.75rem;
+  color: var(--txt-3, #6e7891);
+}
+
+.matplotlib-prerequisites-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.matplotlib-prereq-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.matplotlib-prereq-card:hover {
+  border-color: rgba(74, 222, 128, 0.35);
+  background: rgba(74, 222, 128, 0.06);
+}
+
+.matplotlib-prereq-card strong {
+  font-size: 0.875rem;
+  color: var(--txt-0, #f0f0ff);
+}
+
+.matplotlib-prereq-card p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--txt-2, #9aa3bc);
+}
+
+.matplotlib-prereq-cheat {
+  border-color: rgba(74, 222, 128, 0.25);
+  background: rgba(74, 222, 128, 0.05);
+}
+
+.matplotlib-runtime-note {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--txt-2, #9aa3bc);
+}
+
+.matplotlib-runtime-note code {
+  font-size: 0.78rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: rgba(74, 222, 128, 0.12);
+  color: #86efac;
+}
+
+@media (max-width: 900px) {
+  .matplotlib-prerequisites-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .matplotlib-prerequisites-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lesson-objectives,
+.lesson-scenario {
+  display: flex;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--lesson-accent, #4f46e5) 35%, transparent);
+  background: color-mix(in srgb, var(--lesson-accent, #4f46e5) 8%, transparent);
+}
+
+.lesson-scenario {
+  border-color: rgba(0, 212, 255, 0.28);
+  background: rgba(0, 212, 255, 0.06);
+}
+
+.lesson-objectives-icon,
+.lesson-scenario-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.lesson-objectives strong,
+.lesson-scenario strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: var(--txt-0, #f0f0ff);
+}
+
+.lesson-objectives ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.lesson-objectives li,
+.lesson-scenario p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--txt-1, #c0c8e0);
 }
 
 .numpy-intro-theory {

@@ -121,9 +121,9 @@ export const languageCourses = {
     },
     {
       tag: "Data Visualization",
-      title: "Matplotlib-py",
+      title: "Matplotlib · py",
       description:
-        "Master the art of plotting, charts, and customizing beautiful data science visualizations from scratch.",
+        "Beginner → Pro: line plots to publication dashboards — 8 chapters, objectives per lesson, cheat sheet, and hands-on challenges.",
       href: "/learn/matplotlib-py",
       accent: "#239120",
       icon: Presentation,
@@ -185,6 +185,46 @@ export const languageCourses = {
     }
   ]
 };
+
+/** Ordered stacks for navbar grouping (one row per language, sub-courses inside). */
+export const courseStackGroups = [
+  {
+    id: "cpp",
+    label: "C++",
+    accent: "#659ad2",
+    languagePath: "/language/C++",
+  },
+  {
+    id: "python",
+    label: "Python",
+    accent: "#3776ab",
+    languagePath: "/language/Python",
+  },
+  {
+    id: "javascript",
+    label: "JavaScript",
+    accent: "#f7df1e",
+    languagePath: "/language/JavaScript",
+  },
+  {
+    id: "csharp",
+    label: "C#",
+    accent: "#179c24",
+    languagePath: "/language/C%23",
+  },
+  {
+    id: "php",
+    label: "PHP",
+    accent: "#777bb4",
+    languagePath: "/language/PHP",
+  },
+  {
+    id: "ruby",
+    label: "Ruby",
+    accent: "#701516",
+    languagePath: "/language/Ruby",
+  },
+];
 
 /** Navbar learn links per language (mirrors languageCourses). */
 export const learnNavByLanguage = {
