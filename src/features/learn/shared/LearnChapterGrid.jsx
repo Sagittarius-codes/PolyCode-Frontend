@@ -1,4 +1,7 @@
 import React from "react";
+import LearnChapterIcon from "./LearnChapterIcon";
+import LessonStatusIcon from "./LessonStatusIcon";
+import { CheckCircle2 } from "lucide-react";
 
 export default function LearnChapterGrid({ chapters, progress, basePath, navigate }) {
   return (
@@ -21,13 +24,18 @@ export default function LearnChapterGrid({ chapters, progress, basePath, navigat
           >
             <div className="oops-chapter-header">
               <span className="oops-chapter-icon-wrap" aria-hidden>
-                <span className="oops-chapter-icon">{chapter.icon}</span>
+                <LearnChapterIcon icon={chapter.icon} size={22} />
               </span>
               <div className="oops-chapter-heading">
                 <div className="oops-chapter-num">Chapter {index + 1}</div>
                 <div className="oops-chapter-title">{chapter.title}</div>
               </div>
-              {allDone && <span className="oops-done-badge">✓ Done</span>}
+              {allDone && (
+                <span className="oops-done-badge">
+                  <CheckCircle2 size={14} strokeWidth={2.5} aria-hidden />
+                  Done
+                </span>
+              )}
             </div>
 
             <div className="oops-chapter-progress-track">
@@ -48,7 +56,7 @@ export default function LearnChapterGrid({ chapters, progress, basePath, navigat
                   onClick={() => navigate(`${basePath}/lesson/${lesson.id}`)}
                 >
                   <span className="oops-lesson-status">
-                    {progress[lesson.id] ? "✓" : "○"}
+                    <LessonStatusIcon done={Boolean(progress[lesson.id])} />
                   </span>
                   <span className="oops-lesson-name">{lesson.title}</span>
                   <span className="oops-lesson-xp">+{lesson.xp} XP</span>

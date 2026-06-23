@@ -4433,6 +4433,11 @@ body {
   border: 1px solid color-mix(in srgb, var(--ch-color, var(--acid, #ffe566)) 30%, transparent);
 }
 
+.learn-chapter-icon {
+  color: var(--ch-color, var(--acid, #ffe566));
+  flex-shrink: 0;
+}
+
 .oops-path-step-body {
   flex: 1;
   min-width: 0;
@@ -4568,6 +4573,10 @@ body {
   border: 1px solid color-mix(in srgb, var(--ch-color, var(--acid, #ffe566)) 28%, transparent);
 }
 
+.oops-chapter-icon-wrap .learn-chapter-icon {
+  color: var(--ch-color, var(--acid, #ffe566));
+}
+
 .oops-chapter-heading {
   flex: 1;
   min-width: 0;
@@ -4593,12 +4602,31 @@ body {
 
 .oops-done-badge {
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-size: 0.7rem;
   font-weight: 700;
   color: var(--acid, #ffe566);
   background: rgba(184, 255, 0, 0.1);
-  padding: 2px 8px;
+  padding: 3px 8px;
   border-radius: 4px;
+}
+
+.oops-lesson-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.lesson-status-icon {
+  color: var(--txt-3, #60607a);
+}
+
+.oops-lesson-item.done .lesson-status-icon {
+  color: var(--ch-color, var(--acid, #ffe566));
 }
 
 .oops-chapter-progress-track {
@@ -4650,13 +4678,6 @@ body {
 
 .oops-lesson-item.done .oops-lesson-status {
   color: var(--acid, #ffe566);
-}
-
-.oops-lesson-status {
-  font-size: 0.75rem;
-  color: var(--txt-3, #3a4260);
-  width: 14px;
-  flex-shrink: 0;
 }
 
 .oops-lesson-name {
@@ -7843,7 +7864,21 @@ body {
 }
 
 .oops-sb-icon {
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.oops-sb-icon .learn-chapter-icon {
+  color: var(--ch-color, var(--acid, #ffe566));
+}
+
+.oops-sb-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
   flex-shrink: 0;
 }
 
@@ -7900,13 +7935,6 @@ body {
 
 .oops-sidebar-lesson-btn.done .oops-sb-check {
   color: var(--acid, #ffe566);
-}
-
-.oops-sb-check {
-  font-size: 0.7rem;
-  color: var(--txt-3, #3a4260);
-  flex-shrink: 0;
-  width: 12px;
 }
 
 .oops-sb-xp {

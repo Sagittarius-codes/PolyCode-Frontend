@@ -1,4 +1,5 @@
 import React from "react";
+import LearnChapterIcon from "./LearnChapterIcon";
 
 export default function LearnChapterPathOverview({
   chapters,
@@ -23,7 +24,7 @@ export default function LearnChapterPathOverview({
             onClick={() => onChapterSelect(chapter)}
           >
             <span className="oops-path-step-icon" aria-hidden>
-              {chapter.icon}
+              <LearnChapterIcon icon={chapter.icon} size={20} />
             </span>
             <span className="oops-path-step-body">
               <span className="oops-path-step-num">Chapter {index + 1}</span>
