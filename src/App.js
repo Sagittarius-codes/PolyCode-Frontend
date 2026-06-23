@@ -34,6 +34,7 @@ import {
 import "./styles/stack-picker-dark.css";
 import "./styles/responsive.css";
 import "./styles/theme-dark.css";
+import "./styles/theme-profile.css";
 
 import LandingShell from "./features/landing/LandingShell";
 
@@ -375,7 +376,11 @@ function LearnShell({
           aria-hidden="true"
         />
       )}
-      <main className="main-content learn-content">{children}</main>
+      <main className="main-content learn-content">
+        {React.isValidElement(children)
+          ? React.cloneElement(children, { theme, onThemeChange })
+          : children}
+      </main>
     </LearnNavProvider>
   );
 }
