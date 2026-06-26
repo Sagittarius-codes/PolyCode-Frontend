@@ -27,7 +27,7 @@ import {
 } from "./annotationCursors";
 
 const STAGE_INTERACTIVE_SELECTOR =
-  ".lesson-annotator-text-input, .lesson-annotator-label, .lesson-annotator-fab-wrap, .numpy-notes-panel, .oops-notes-panel, .numpy-confidence-panel, .numpy-mark-read-panel, .numpy-theory-actions, .lesson-read-gate, .lesson-confidence-panel, .lesson-read-actions, textarea, input, select, button, a";
+  ".lesson-annotator-text-input, .lesson-annotator-label, .lesson-annotator-fab-wrap, .numpy-lesson-outcomes, .numpy-confidence-panel, .numpy-mark-read-panel, .numpy-theory-actions, .lesson-read-gate, .lesson-confidence-panel, .lesson-read-actions, textarea, input, select, button, a";
 
 const TOOLS = {
   POINTER: "pointer",
@@ -62,7 +62,11 @@ function loadFabPosition() {
       Number.isFinite(parsed.x) &&
       Number.isFinite(parsed.y)
     ) {
-      return parsed;
+      const clamped = clampFabPosition(parsed.x, parsed.y);
+      if (clamped.x !== parsed.x || clamped.y !== parsed.y) {
+        saveFabPosition(clamped);
+      }
+      return clamped;
     }
   } catch {
     // ignore
@@ -438,6 +442,21 @@ export default function LessonAnnotator({ storageKey, children }) {
 
     redrawCanvas(strokes);
   }, [redrawCanvas, strokes]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setFabPosition((current) => {
+        if (!current) return current;
+        const clamped = clampFabPosition(current.x, current.y);
+        if (clamped.x === current.x && clamped.y === current.y) return current;
+        saveFabPosition(clamped);
+        return clamped;
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const saved = loadAnnotations(storageKey);

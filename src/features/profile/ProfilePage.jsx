@@ -4,6 +4,8 @@ import { useAuth } from "../auth/context/AuthContext";
 import { rememberSignedInUser } from "../../lib/authSession";
 import ProfileEditSection from "./components/ProfileEditSection";
 import ProfileHero from "./components/ProfileHero";
+import DailyXpProgressSection from "./components/DailyXpProgressSection";
+import useDailyXpProgress from "./hooks/useDailyXpProgress";
 import { ALL_LESSONS, TOTAL_XP } from "../learn/oops-cpp/data/oopsCurriculum";
 import useOopsProgress from "../learn/oops-cpp/hooks/useOopsProgress";
 import {
@@ -21,6 +23,11 @@ import {
   PANDAS_TOTAL_XP,
 } from "../learn/pandas-py/data/pandasCurriculum";
 import usePandasProgress from "../learn/pandas-py/hooks/usePandasProgress";
+import {
+  FASTAPI_LESSONS,
+  FASTAPI_TOTAL_XP,
+} from "../learn/fastapi-py/data/fastapiCurriculum";
+import useFastapiProgress from "../learn/fastapi-py/hooks/useFastapiProgress";
 import CourseCertificate from "../learn/shared/CourseCertificate";
 import {
   getFollowStatus,
@@ -28,6 +35,10 @@ import {
   getProfileByUsername,
   setFollowStatus,
 } from "./services/profileApi";
+import {
+  ActivityBarChart,
+  ActivityLineChart,
+} from "./components/ActivityCharts";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_ACTIVITY_DAYS = 30;
@@ -147,6 +158,11 @@ function ActivityGraph({ days }) {
           <span>More</span>
         </div>
       </div>
+
+      <div className="profile-activity-charts">
+        <ActivityLineChart days={days} />
+        <ActivityBarChart days={days} />
+      </div>
     </section>
   );
 }
@@ -265,20 +281,24 @@ export default function ProfilePage() {
       (signedInUsername && routeUsername === signedInUsername) ||
       !signedInUsername);
   const profileUser = isOwnProfile ? user : publicUser;
+  const dailyXp = useDailyXpProgress({ enabled: isOwnProfile && Boolean(token) });
   const oops = useOopsProgress();
   const pointers = usePointersProgress();
   const numpy = useNumpyProgress();
   const pandas = usePandasProgress();
+  const fastapi = useFastapiProgress();
   const totalCompleted =
     Object.keys(oops.completedMap).length +
     Object.keys(pointers.completedMap).length +
     Object.keys(numpy.completedMap).length +
-    Object.keys(pandas.completedMap).length;
+    Object.keys(pandas.completedMap).length +
+    Object.keys(fastapi.completedMap).length;
   const totalLessons =
     ALL_LESSONS.length +
     POINTER_LESSONS.length +
     NUMPY_LESSONS.length +
-    PANDAS_LESSONS.length;
+    PANDAS_LESSONS.length +
+    FASTAPI_LESSONS.length;
   const totalPct = Math.round((totalCompleted / totalLessons) * 100) || 0;
   const totalStreak = oops.remoteProgress?.currentStreak || 0;
   const [activityWidth, setActivityWidth] = React.useState(0);
@@ -292,6 +312,7 @@ export default function ProfilePage() {
         pointers.completedMap,
         numpy.completedMap,
         pandas.completedMap,
+        fastapi.completedMap,
       ),
     [
       activityDayCount,
@@ -299,6 +320,7 @@ export default function ProfilePage() {
       pointers.completedMap,
       numpy.completedMap,
       pandas.completedMap,
+      fastapi.completedMap,
     ],
   );
   const completedCertificates = [
@@ -325,6 +347,12 @@ export default function ProfilePage() {
       lessons: PANDAS_LESSONS,
       totalXP: PANDAS_TOTAL_XP,
       progress: pandas.completedMap,
+    }),
+    getCompletedTrackCertificate({
+      courseName: "FastAPI for Python",
+      lessons: FASTAPI_LESSONS,
+      totalXP: FASTAPI_TOTAL_XP,
+      progress: fastapi.completedMap,
     }),
   ].filter(Boolean);
   const certificateOwnerPath = `/@${routeUsername || signedInUsername || profileUser?.username}`;
@@ -513,6 +541,9 @@ export default function ProfilePage() {
         isAuthenticated={isAuthenticated}
         canEdit={isAuthenticated && isOwnProfile}
         totalStreak={totalStreak}
+        totalCompleted={totalCompleted}
+        totalLessons={totalLessons}
+        totalPct={totalPct}
         editOpen={editOpen}
         onToggleEdit={() => setEditOpen((open) => !open)}
         isFollowing={isFollowing}
@@ -554,6 +585,17 @@ export default function ProfilePage() {
           <strong>{totalPct}%</strong>
         </div>
       </section>
+
+      {isOwnProfile ? (
+        <DailyXpProgressSection
+          data={dailyXp.data}
+          loading={dailyXp.loading}
+          error={dailyXp.error}
+          markingDate={dailyXp.markingDate}
+          onRefresh={dailyXp.refresh}
+          onMarkRead={dailyXp.markRead}
+        />
+      ) : null}
 
       <div ref={activityWrapRef}>
         <ActivityGraph days={activityDays} />
@@ -600,6 +642,16 @@ export default function ProfilePage() {
           bookmarks={pandas.bookmarks}
           href="/learn/pandas-py"
           accent="#059669"
+        />
+        <TrackProgressCard
+          title="FastAPI · py"
+          subtitle="Python API track"
+          lessons={FASTAPI_LESSONS}
+          totalXP={FASTAPI_TOTAL_XP}
+          progress={fastapi.completedMap}
+          bookmarks={fastapi.bookmarks}
+          href="/learn/fastapi-py"
+          accent="#009688"
         />
       </div>
 

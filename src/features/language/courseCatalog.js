@@ -2,12 +2,15 @@ import {
   Boxes,
   FileText,
   Grid3x3,
+  Globe,
   Layers3,
   Play,
   Brain,
   Table2,
   Terminal,
   Presentation,
+  BrainCircuit,
+  Server,
 } from "lucide-react";
 
 export function languageKey(value = "") {
@@ -120,24 +123,51 @@ export const languageCourses = {
       accent: "#059669",
     },
     {
-      tag: "Data Visualization",
-      title: "Matplotlib-py",
+      title: "FastAPI · py",
+      tag: "API Course",
+      icon: Server,
       description:
-        "Master the art of plotting, charts, and customizing beautiful data science visualizations from scratch.",
+        "Beginner → advanced REST APIs: routes, Pydantic, CRUD, dependencies, routers, testing, and capstone.",
+      href: "/learn/fastapi-py",
+      accent: "#009688",
+    },
+    {
+      tag: "Data Visualization",
+      title: "Matplotlib · py",
+      description:
+        "Beginner → Pro: line plots to publication dashboards — 8 chapters, objectives per lesson, cheat sheet, and hands-on challenges.",
       href: "/learn/matplotlib-py",
       accent: "#239120",
       icon: Presentation,
+    },
+    {
+      title: "AI/ML · py",
+      tag: "Data Course",
+      icon: BrainCircuit,
+      description:
+        "Foundations of AI/ML: Machine Learning, Deep Learning, Neural Networks, Model Evaluation, and Deployment workflows with Python.",
+      href: "/learn/ai_ml-py",
+      accent: "#dfbe00",
     },
   ],
   javascript: [
     {
       title: "JavaScript Fundamentals",
-      tag: "Interactive Course",
+      tag: "Core Course",
       icon: Grid3x3,
       description:
-        "Variables, logic, functions, arrays, and objects with friendly theory and hands-on JS challenges.",
+        "Core language skills: variables, logic, functions, arrays, objects, async, and classes with hands-on challenges.",
       href: "/learn/js-fundamentals",
       accent: "#f59e0b",
+    },
+    {
+      title: "JavaScript Web Development",
+      tag: "Web Course",
+      icon: Globe,
+      description:
+        "Beginner to advanced browser track: DOM, events, forms, fetch, storage, performance, routing, a11y, security, and capstone projects.",
+      href: "/learn/js-web-dev",
+      accent: "#22c55e",
     },
   ],
   php: [
@@ -186,6 +216,46 @@ export const languageCourses = {
   ]
 };
 
+/** Ordered stacks for navbar grouping (one row per language, sub-courses inside). */
+export const courseStackGroups = [
+  {
+    id: "cpp",
+    label: "C++",
+    accent: "#659ad2",
+    languagePath: "/language/C++",
+  },
+  {
+    id: "python",
+    label: "Python",
+    accent: "#3776ab",
+    languagePath: "/language/Python",
+  },
+  {
+    id: "javascript",
+    label: "JavaScript",
+    accent: "#f7df1e",
+    languagePath: "/language/JavaScript",
+  },
+  {
+    id: "csharp",
+    label: "C#",
+    accent: "#179c24",
+    languagePath: "/language/C%23",
+  },
+  {
+    id: "php",
+    label: "PHP",
+    accent: "#777bb4",
+    languagePath: "/language/PHP",
+  },
+  {
+    id: "ruby",
+    label: "Ruby",
+    accent: "#701516",
+    languagePath: "/language/Ruby",
+  },
+];
+
 /** Navbar learn links per language (mirrors languageCourses). */
 export const learnNavByLanguage = {
   cpp: [
@@ -201,9 +271,14 @@ export const learnNavByLanguage = {
   python: [
     { label: "NumPy", to: "/learn/numpy-py" },
     { label: "Pandas", to: "/learn/pandas-py" },
+    { label: "FastAPI", to: "/learn/fastapi-py" },
     { label: "Matplotlib", to: "/learn/matplotlib-py" },
+    { label: "AI/ML", to: "/learn/ai_ml-py" },
   ],
-  javascript: [{ label: "JS Basics", to: "/learn/js-fundamentals" }],
+  javascript: [
+    { label: "Fundamentals", to: "/learn/js-fundamentals" },
+    { label: "Web Dev", to: "/learn/js-web-dev" },
+  ],
   php: [{ label: "PHP Basics", to: "/learn/php-fundamentals" }],
   ruby: [{label: "Ruby Basics", to: "/learn/ruby-fundamentals"}]
 };
@@ -220,11 +295,16 @@ export function inferLanguageFromLearnPath(pathname = "") {
   if (
     pathname.startsWith("/learn/numpy-py") ||
     pathname.startsWith("/learn/pandas-py") ||
-    pathname.startsWith("/learn/matplotlib-py")
+    pathname.startsWith("/learn/fastapi-py") ||
+    pathname.startsWith("/learn/matplotlib-py") ||
+    pathname.startsWith("/learn/ai_ml-py")
   ) {
     return "python";
   }
-  if (pathname.startsWith("/learn/js-fundamentals")) {
+  if (
+    pathname.startsWith("/learn/js-fundamentals") ||
+    pathname.startsWith("/learn/js-web-dev")
+  ) {
     return "javascript";
   }
   if (pathname.startsWith("/learn/php-fundamentals")) {
