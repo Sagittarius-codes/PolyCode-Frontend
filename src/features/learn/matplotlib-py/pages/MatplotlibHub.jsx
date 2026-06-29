@@ -179,9 +179,9 @@ export default function MatplotlibHub() {
           <small>Recommended background · not required for lesson 1</small>
         </div>
         <div className="matplotlib-prerequisites-grid">
-          <Link to="/language/Python" className="matplotlib-prereq-card">
-            <strong>Python basics</strong>
-            <p>Variables, lists, and functions — enough to read lesson code.</p>
+          <Link to="/learn/python-fundamentals" className="matplotlib-prereq-card">
+            <strong>Python Fundamentals</strong>
+            <p>Variables, lists, and functions — the structured path before data courses.</p>
           </Link>
           <Link to="/learn/numpy-py" className="matplotlib-prereq-card">
             <strong>NumPy</strong>
@@ -339,6 +339,7 @@ export default function MatplotlibHub() {
               <article
                 key={stage.level}
                 className="matplotlib-path-card"
+                style={{ "--stage-color": stage.color }}
               >
                 <header className="matplotlib-path-card-head">
                   <span className="matplotlib-path-level">{stage.level}</span>

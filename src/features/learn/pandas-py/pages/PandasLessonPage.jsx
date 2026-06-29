@@ -189,6 +189,8 @@ export default function PandasLessonPage() {
           {tab === "theory" ? (
             <NumpyIntroTheory
               lesson={lesson}
+              introVariant="course-start"
+              quizStoragePrefix={READ_GATE_PREFIX}
               confidence={confidence}
               onConfidenceChange={handleConfidenceChange}
               markedAsRead={markedAsRead}

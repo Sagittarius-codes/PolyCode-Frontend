@@ -90,11 +90,11 @@
   --txt-2: #6b7280;
   --txt-3: #9ca3af;
 
-  --acid: #4f46e5;
-  --acid-rgb: 79, 70, 229;
+  --acid: #2563eb;
+  --acid-rgb: 37, 99, 235;
   --cyan: #0284c7;
-  --violet: #7c3aed;
-  --accent: #4f46e5;
+  --violet: #3b82f6;
+  --accent: #2563eb;
   --acid-glow: rgba(79, 70, 229, 0.2);
   --acid-dim: rgba(79, 70, 229, 0.08);
   --cyan-dim: rgba(2, 132, 199, 0.08);
@@ -211,11 +211,10 @@ body {
   min-height: var(--footer-h);
   margin: 0 auto;
   padding: 0.75rem 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .app-footer-meta {
@@ -223,16 +222,19 @@ body {
   align-items: center;
   gap: 0.65rem;
   min-width: 0;
+  justify-self: start;
 }
 
 .app-footer-brand {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  justify-self: end;
   color: var(--txt-1);
   text-decoration: none;
   font-size: 0.8125rem;
   font-weight: 500;
+  line-height: 1.25;
   transition: color 0.15s;
 }
 
@@ -241,22 +243,57 @@ body {
 }
 
 .app-footer-logo {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.35rem;
+  height: 1.35rem;
   object-fit: contain;
-  border-radius: 0.25rem;
+  border-radius: 50%;
+}
+
+.app-footer-home {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.app-footer-home:hover .app-footer-polycode-logo {
+  transform: scale(1.04);
+}
+
+.app-footer-polycode-logo {
+  height: 1.75rem;
+  width: auto;
+  min-width: 1.75rem;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.app.theme-light .app-footer-polycode-logo,
+.theme-light .app-footer-polycode-logo {
+  padding: 3px;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #eef2ff 0%, #f8fafc 52%, #ecfeff 100%);
+  border: 1px solid rgba(79, 70, 229, 0.22);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
 .app-footer-project {
-  color: var(--txt-0);
+  color: var(--txt-3);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.01em;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
 .app-footer-copy {
   color: var(--txt-3);
   font-size: 0.8125rem;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
 .theme-light .app-footer {
@@ -270,9 +307,15 @@ body {
 
 @media (max-width: 560px) {
   .app-footer-inner {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
     padding: 0.85rem 0;
+  }
+
+  .app-footer-meta,
+  .app-footer-brand {
+    justify-self: center;
   }
 }
 
@@ -976,10 +1019,10 @@ body {
 
 .hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 8vw, 6.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
   margin-bottom: 32px;
   color: #fff;
 }
@@ -987,9 +1030,9 @@ body {
 .hero h1 .gradient-text {
   background: linear-gradient(
     135deg,
-    var(--acid) 0%,
-    var(--cyan) 60%,
-    var(--violet) 100%
+    var(--hero-gradient-start, var(--acid)) 0%,
+    var(--hero-gradient-mid, var(--cyan)) 52%,
+    var(--hero-gradient-end, var(--violet)) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3542,11 +3585,11 @@ body {
   --txt-1: #374151;
   --txt-2: #6b7280;
   --txt-3: #9ca3af;
-  --acid: #4f46e5;
-  --acid-rgb: 79, 70, 229;
-  --accent: #4f46e5;
-  --acid-glow: rgba(79, 70, 229, 0.2);
-  --acid-dim: rgba(79, 70, 229, 0.08);
+  --acid: #2563eb;
+  --acid-rgb: 37, 99, 235;
+  --accent: #2563eb;
+  --acid-glow: rgba(37, 99, 235, 0.2);
+  --acid-dim: rgba(37, 99, 235, 0.1);
   --cyan: #0284c7;
   --cyan-dim: rgba(2, 132, 199, 0.08);
   --violet: #7c3aed;
@@ -3607,7 +3650,7 @@ body {
 }
 
 .app.theme-light .hero h1 .gradient-text {
-  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 50%, #7c3aed 100%);
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 55%, #60a5fa 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -3630,13 +3673,14 @@ body {
 }
 
 .app.theme-light .navbar-signup-btn {
-  background: #111827;
+  background: var(--accent);
   color: #ffffff;
-  border: 1px solid #111827;
+  border: 1px solid var(--accent);
 }
 
 .app.theme-light .navbar-signup-btn:hover {
-  background: #1f2937;
+  background: #1d4ed8;
+  border-color: #1d4ed8;
   opacity: 1;
 }
 
@@ -3723,12 +3767,13 @@ body {
 }
 
 .app.theme-light .btn-primary {
-  background: #111827;
+  background: var(--accent);
   color: #ffffff;
 }
 
 .app.theme-light .btn-primary:hover {
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+  background: #1d4ed8;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.25);
 }
 
 .app.theme-light .btn-secondary {
@@ -3802,28 +3847,63 @@ body {
 .app.theme-light .section-label,
 .app.theme-light .view-all,
 .app.theme-light .search-count,
-.app.theme-light .empty-state,
-.app.theme-light .tree-file,
-.app.theme-light .sidebar-item,
-.app.theme-light .sidebar-section-title {
+.app.theme-light .empty-state {
   color: var(--txt-1);
+}
+
+/* Sidebar + docs tree — blue icons/accents; neutral text in light mode */
+.app.theme-light .sidebar-section-title {
+  color: var(--txt-3);
+}
+
+.app.theme-light .sidebar-item,
+.app.theme-light .tree-folder-btn,
+.app.theme-light .tree-file {
+  color: var(--txt-1);
+}
+
+.app.theme-light .sidebar-item .icon,
+.app.theme-light .tree-icon {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.app.theme-light .tree-caret {
+  color: var(--txt-3);
+}
+
+.app.theme-light .tree-empty {
+  color: var(--txt-2);
 }
 
 .app.theme-light .sidebar-item:hover,
 .app.theme-light .tree-folder-btn:hover,
 .app.theme-light .tree-file:hover,
 .app.theme-light .lang-option:hover {
-  background: var(--glass-2);
+  background: rgba(37, 99, 235, 0.08);
   color: var(--txt-0);
+}
+
+.app.theme-light .sidebar-item:hover .icon,
+.app.theme-light .tree-folder-btn:hover .tree-icon,
+.app.theme-light .tree-folder-btn:hover .tree-caret,
+.app.theme-light .tree-file:hover .tree-icon {
+  color: var(--accent);
 }
 
 .app.theme-light .sidebar-item.active,
 .app.theme-light .tree-file.active,
 .app.theme-light .lang-option.active {
-  background: rgba(var(--acid-rgb), 0.1);
-  border-color: rgba(var(--acid-rgb), 0.2);
+  background: rgba(var(--acid-rgb), 0.12);
+  border-left-color: var(--accent);
+  border-color: rgba(var(--acid-rgb), 0.22);
   color: var(--accent);
   font-weight: 600;
+}
+
+.app.theme-light .sidebar-item.active .icon,
+.app.theme-light .tree-file.active .tree-icon {
+  color: var(--accent);
 }
 
 .app.theme-light .navbar-playground-link {
@@ -3984,10 +4064,13 @@ body {
 .app.theme-light .pph-current strong,
 .app.theme-light .pg-logo,
 .app.theme-light .pg-tab.active,
-.app.theme-light .pg-run-btn,
-.app.theme-light .ide-btn.run-btn,
 .app.theme-light .ide-runtime-pill {
   color: #0f172a;
+}
+
+.app.theme-light .pg-run-btn,
+.app.theme-light .ide-btn.run-btn {
+  color: #ffffff;
 }
 
 .app.theme-light .pph-current,
@@ -4099,9 +4182,9 @@ body {
 
 .oops-hero-title {
   font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
+  font-weight: 600;
   color: var(--txt-0, #f0f0ff);
-  line-height: 1.1;
+  line-height: 1.15;
   margin: 0 0 12px;
 }
 
@@ -6578,9 +6661,10 @@ body {
 .language-hero-copy h1 {
   margin: 12px 0;
   color: var(--txt-0, #ffffff);
-  font-size: clamp(3rem, 9vw, 7.5rem);
-  line-height: 0.9;
-  letter-spacing: 0;
+  font-size: clamp(2.25rem, 7vw, 5.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
 }
 
 .language-hero-copy p {
@@ -8639,6 +8723,38 @@ body {
   margin: 0 auto;
 }
 
+.numpy-intro-theory--course-start .numpy-lesson-hero {
+  border-color: color-mix(in srgb, var(--numpy-accent, #2563eb) 48%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--numpy-accent, #2563eb) 16%, transparent),
+      transparent 58%
+    ),
+    rgba(255, 255, 255, 0.02);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--acid, #ffe566) 22%, transparent);
+}
+
+.numpy-intro-theory--course-start .numpy-chapter-badge {
+  color: var(--acid, #ffe566);
+}
+
+.numpy-intro-theory--course-start .numpy-path-label {
+  margin-top: 4px;
+  padding-bottom: 14px;
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--acid, #ffe566) 28%,
+    var(--border, rgba(255, 255, 255, 0.08))
+  );
+}
+
+.numpy-intro-theory--course-start .lesson-objectives {
+  margin-top: 2px;
+  border-color: color-mix(in srgb, var(--numpy-accent, #2563eb) 42%, transparent);
+  background: color-mix(in srgb, var(--numpy-accent, #2563eb) 10%, transparent);
+}
+
 .numpy-lesson-hero {
   margin-bottom: 28px;
   padding: 24px 26px;
@@ -8655,10 +8771,6 @@ body {
   border-radius: 10px;
   border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
   background: color-mix(in srgb, var(--vscode-panel, #12141c) 88%, transparent);
-}
-
-.numpy-lesson-outcomes-first {
-  margin-bottom: 24px;
   border-color: color-mix(
     in srgb,
     var(--numpy-accent, var(--acid, #ffe566)) 35%,
@@ -8714,6 +8826,10 @@ body {
   gap: 18px;
 }
 
+.numpy-lesson-outcomes-top {
+  margin: 0 0 20px;
+}
+
 .numpy-chapter-badge {
   display: inline-block;
   font-size: 0.72rem;
@@ -8739,6 +8855,15 @@ body {
   line-height: 1.65;
   color: var(--txt-1, #c0c8e0);
   margin: 0;
+}
+
+.numpy-lesson-intro-label {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--numpy-accent, var(--acid, #818cf8));
 }
 
 .numpy-path-label {
@@ -8772,6 +8897,12 @@ body {
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.025);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.numpy-array-card {
+  overflow: hidden;
 }
 
 .numpy-step-head {
@@ -8804,6 +8935,9 @@ body {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--txt-2, #6e7891);
+  flex: 1;
+  min-width: 0;
+  line-height: 1.45;
 }
 
 .numpy-step-text {
@@ -8933,6 +9067,13 @@ body {
 .numpy-vt-corner,
 .numpy-vt-corner-total {
   background: transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--txt-2, #8b93a8);
+}
+
+.numpy-vt-corner:empty,
+.numpy-vt-corner-total:empty {
   border-color: transparent !important;
 }
 
@@ -8988,7 +9129,7 @@ body {
   margin: 12px 0 0;
   font-size: 0.86rem;
   line-height: 1.55;
-  color: #9aa3b8;
+  color: var(--txt-2, #9aa3b8);
 }
 
 .numpy-vt-row-highlight .numpy-vt-row-head,
@@ -9001,6 +9142,8 @@ body {
   flex-direction: column;
   gap: 14px;
   margin-top: 4px;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .numpy-array-row-block {
@@ -9009,6 +9152,27 @@ body {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.numpy-array-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+}
+
+.numpy-array-row-block-wide .numpy-array-col-labels,
+.numpy-array-row-block-wide .numpy-array-data-row {
+  width: max-content;
+  min-width: 100%;
+}
+
+.numpy-array-row-block-wide .numpy-array-cell {
+  min-width: 40px;
+  padding: 6px 8px;
 }
 
 .numpy-array-row-compact {
@@ -9091,7 +9255,7 @@ body {
   margin: 0;
   font-size: 0.86rem;
   line-height: 1.55;
-  color: #9aa3b8;
+  color: var(--txt-2, #9aa3b8);
 }
 
 .numpy-matrix-op-wrap {
@@ -9317,6 +9481,128 @@ body {
   color: var(--txt-1, #c0c8e0);
 }
 
+/* Lesson MCQ slider */
+.lesson-quiz-slider {
+  margin-top: 4px;
+  padding: 18px 20px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.lesson-quiz-slider-head {
+  margin-bottom: 12px;
+}
+
+.lesson-quiz-slider-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.lesson-quiz-slider-count {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--txt-2, #a0a0b8);
+}
+
+.lesson-quiz-slider-progress {
+  font-size: 0.8rem;
+  color: var(--txt-3, #6e7891);
+}
+
+.lesson-quiz-slider-viewport {
+  min-height: 0;
+}
+
+.lesson-quiz-slide {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.lesson-quiz-slider-viewport .numpy-quiz-card,
+.lesson-quiz-slider-viewport .oops-quiz-card {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.lesson-quiz-slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lesson-quiz-slider-nav {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--txt-1, #c0c8e0);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
+}
+
+.lesson-quiz-slider-nav:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--lesson-quiz-accent, #818cf8) 50%, #fff);
+  color: var(--txt-0, #f0f0ff);
+}
+
+.lesson-quiz-slider-nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.lesson-quiz-slider-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.lesson-quiz-slider-dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+
+.lesson-quiz-slider-dot--active {
+  transform: scale(1.15);
+  background: var(--lesson-quiz-accent, #818cf8);
+}
+
+.lesson-quiz-slider-dot--done:not(.lesson-quiz-slider-dot--active) {
+  background: color-mix(in srgb, var(--lesson-quiz-accent, #818cf8) 55%, #fff);
+}
+
 .numpy-confidence-panel {
   margin-top: 28px;
   padding: 20px;
@@ -9457,6 +9743,14 @@ body {
   font-size: 0.92rem;
   line-height: 1.55;
   color: #9aa3b8;
+}
+
+.lesson-read-gate-error {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #f87171;
 }
 
 .lesson-mark-read-btn {

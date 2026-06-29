@@ -8,7 +8,10 @@ import OopsSidebar from "../components/OopsSidebar";
 import LearnProfileMenu from "../../shared/LearnProfileMenu";
 import LessonContentShell from "../../shared/LessonContentShell";
 import LessonReadGate from "../../shared/LessonReadGate";
+import LessonQuizSlider from "../../shared/LessonQuizSlider";
 import useLessonReadGate from "../../shared/useLessonReadGate";
+import useLessonQuizAttempts from "../../shared/useLessonQuizAttempts";
+import { mapTheoryWithQuizIndices } from "../../shared/lessonQuizUtils";
 import LessonChallengeTab from "../../shared/LessonChallengeTab";
 import useOopsProgress from "../hooks/useOopsProgress";
 import { useLessonAssistantContext } from "../../../assistant/hooks/useLessonAssistantContext";
@@ -101,6 +104,14 @@ export default function LessonPage() {
   const codeSaveTimer = useRef(null);
 
   const lesson = ALL_LESSONS.find((l) => l.id === lessonId);
+  const {
+    preparedLesson,
+    quizCount,
+    attemptedCount,
+    recordAttempt,
+    getSelection,
+  } = useLessonQuizAttempts(READ_GATE_PREFIX, lessonId, lesson);
+  const theoryLesson = preparedLesson || lesson;
   const lessonIdx = ALL_LESSONS.findIndex((l) => l.id === lessonId);
   const prev = ALL_LESSONS[lessonIdx - 1];
   const next = ALL_LESSONS[lessonIdx + 1];
@@ -351,14 +362,43 @@ export default function LessonPage() {
                   </ul>
                 </div>
               </div>
-              {lesson.theory.map((block, i) => (
-                <ConceptCard
-                  key={i}
-                  block={block}
-                  accentColor={LEARN_ACCENT}
-                  runnableCodeLangs={["cpp", "c++"]}
-                />
-              ))}
+              {(() => {
+                const theoryWithQuizMeta = mapTheoryWithQuizIndices(
+                  theoryLesson?.theory || [],
+                );
+                const quizSlides = theoryWithQuizMeta
+                  .filter(({ block }) => block.type === "quiz")
+                  .map(({ block, quizIndex }) => ({ block, quizIndex }));
+                let quizSliderRendered = false;
+
+                return theoryWithQuizMeta.map(
+                  ({ block, theoryIndex, quizIndex }) => {
+                    if (block.type === "quiz") {
+                      if (quizSliderRendered) return null;
+                      quizSliderRendered = true;
+                      return (
+                        <LessonQuizSlider
+                          key={`quiz-slider-${theoryIndex}`}
+                          quizzes={quizSlides}
+                          accentColor={LEARN_ACCENT}
+                          getSelection={getSelection}
+                          onQuizAnswer={recordAttempt}
+                          variant="oops"
+                        />
+                      );
+                    }
+
+                    return (
+                      <ConceptCard
+                        key={theoryIndex}
+                        block={block}
+                        accentColor={LEARN_ACCENT}
+                        runnableCodeLangs={["cpp", "c++"]}
+                      />
+                    );
+                  },
+                );
+              })()}
 
               <LessonReadGate
                 markedAsRead={markedAsRead}
@@ -367,6 +407,8 @@ export default function LessonPage() {
                 onConfidenceChange={handleConfidenceChange}
                 onGoChallenge={goToChallenge}
                 accentColor={LEARN_ACCENT}
+                quizzesRequired={quizCount}
+                quizzesAttempted={attemptedCount}
                 challengeLabel="Ready? Take the Challenge →"
               />
             </div>

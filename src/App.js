@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  Link,
   useNavigate,
   useLocation,
 } from "react-router-dom";
@@ -36,6 +37,7 @@ import "./styles/stack-picker-dark.css";
 import "./styles/responsive.css";
 import "./styles/theme-dark.css";
 import "./styles/theme-profile.css";
+import "./styles/theme-light-complete.css";
 
 import LandingShell from "./features/landing/LandingShell";
 
@@ -125,6 +127,16 @@ const NumpyHub = lazyWithChunkRetry(
 const NumpyLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/numpy-py/pages/NumpyLessonPage"),
 );
+const PythonFundamentalsHub = lazyWithChunkRetry(
+  () =>
+    import("./features/learn/python-fundamentals/pages/PythonFundamentalsHub"),
+);
+const PythonFundamentalsLessonPage = lazyWithChunkRetry(
+  () =>
+    import(
+      "./features/learn/python-fundamentals/pages/PythonFundamentalsLessonPage"
+    ),
+);
 const MatplotlibHub = lazyWithChunkRetry(
   () => import("./features/learn/matplotlib-py/pages/MatplotlibHub"),
 );
@@ -205,8 +217,18 @@ function AppFooter() {
     <footer className="app-footer">
       <div className="app-footer-inner">
         <div className="app-footer-meta">
-          <span className="app-footer-project">PolyCode</span>
+          <Link to="/" className="app-footer-home" aria-label="PolyCode home">
+            <img
+              src="/images/polycode-logo.png"
+              alt=""
+              className="app-footer-polycode-logo"
+              width={28}
+              height={28}
+              decoding="async"
+            />
+          </Link>
           <span className="app-footer-copy">© {year}</span>
+          <span className="app-footer-project">PolyCode</span>
         </div>
         <a
           className="app-footer-brand"
@@ -528,6 +550,7 @@ function AppRoutes() {
   React.useEffect(() => {
     const path = location.pathname;
     if (
+      path.startsWith("/learn/python-fundamentals") ||
       path.startsWith("/learn/numpy-py") ||
       path.startsWith("/learn/pandas-py") ||
       path.startsWith("/learn/fastapi-py") ||
@@ -727,6 +750,36 @@ function AppRoutes() {
                 selectedLanguage={selectedLanguage}
               >
                 <PointersLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/python-fundamentals"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PythonFundamentalsHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/python-fundamentals/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PythonFundamentalsLessonPage />
               </LearnShell>
             </ThemedShell>
           }

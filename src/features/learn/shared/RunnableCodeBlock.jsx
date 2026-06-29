@@ -22,7 +22,6 @@ import {
   getPythonRuntimeError,
   runPythonCode,
 } from "./runPython";
-import PythonRunOutput from "./PythonRunOutput";
 import {
   formatCsharpOutput,
   getCsharpRuntimeError,
@@ -44,8 +43,7 @@ function normalizeLang(lang = "python") {
   if (value === "c++" || value === "cpp") return "cpp";
   if (value === "javascript" || value === "js") return "javascript";
   if (value === "csharp" || value === "c#") return "csharp";
-  if (value === "ruby") return "ruby"; 
-  if (value === "php") return "php";
+  if (value === "ruby") return "ruby"; // Explicitly normalize ruby strings
   return value;
 }
 
@@ -66,10 +64,10 @@ async function executeTheoryCode(source, lang) {
     return runJavaScriptCode(source);
   }
   if (lang === "csharp") {
-    return runCsharpCode(source);
+    return runCsharpCode(source); 
   }
   if (lang === "ruby") {
-    return runRubyCode(source);
+    return runRubyCode(source, { learn: true });
   }
   if (lang === "php"){
     return runPhpCode(source);
@@ -82,7 +80,6 @@ function formatTheoryOutput(result, lang) {
   if (lang === "javascript") return formatJavaScriptOutput(result);
   if (lang === "csharp") return formatCsharpOutput(result);
   if (lang === "ruby") return formatRubyOutput(result);
-  if (lang === "php") return formatPhpOutput(result);
   return formatPythonOutput(result);
 }
 
@@ -91,7 +88,6 @@ function getTheoryRuntimeError(result, lang) {
   if (lang === "javascript") return getJavaScriptRuntimeError(result);
   if (lang === "csharp") return getCsharpRuntimeError(result);
   if (lang === "ruby") return getRubyRuntimeError(result);
-  if (lang === "php") return getPhpRuntimeError(result);
   return getPythonRuntimeError(result);
 }
 
@@ -152,19 +148,11 @@ export default function RunnableCodeBlock({
 
       const stdout =
         formatTheoryOutput(result, lang) ||
-        (result.plotImages?.length
-          ? `Rendered ${result.plotImages.length} chart${result.plotImages.length > 1 ? "s" : ""}.`
-          : lang === "ruby"
-            ? "Ruby ran successfully. Add puts to display values, e.g. puts total"
-            : runtime === "server"
-              ? "Ran on server (no printed output)."
-              : "Ran in browser (no printed output).");
+        (runtime === "server"
+          ? "Ran on server (no printed output)."
+          : "Ran in browser (no printed output).");
 
-      setOutput({
-        status: "pass",
-        stdout,
-        plotImages: result.plotImages || [],
-      });
+      setOutput({ status: "pass", stdout });
     } catch (error) {
       setOutput({
         status: "fail",
@@ -276,11 +264,9 @@ export default function RunnableCodeBlock({
             )}
           </div>
         </div>
-        <PythonRunOutput
-          stdout={output?.stdout}
-          plotImages={output?.plotImages}
-          emptyHint="Output will appear here after you run the code."
-        />
+        <pre className="oops-output-body">
+          {output?.stdout || "Output will appear here after you run the code."}
+        </pre>
       </div>
     </div>
   );
