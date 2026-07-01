@@ -121,6 +121,12 @@ const PointersHub = lazyWithChunkRetry(
 const PointersLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/pointers-cpp/pages/PointersLessonPage"),
 );
+const DsaHub = lazyWithChunkRetry(
+  () => import("./features/learn/dsa-cpp/pages/DsaHub"),
+);
+const DsaLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/dsa-cpp/pages/DsaLessonPage"),
+);
 const NumpyHub = lazyWithChunkRetry(
   () => import("./features/learn/numpy-py/pages/NumpyHub"),
 );
@@ -750,6 +756,51 @@ function AppRoutes() {
                 selectedLanguage={selectedLanguage}
               >
                 <PointersLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/dsa-cpp"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <DsaHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/dsa-cpp/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <DsaLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/dsa-cpp/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <DsaLessonPage />
               </LearnShell>
             </ThemedShell>
           }

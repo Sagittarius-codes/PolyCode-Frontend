@@ -73,6 +73,15 @@ export const languageCourses = {
       href: "/learn/pointers-cpp",
       accent: "#00d4ff",
     },
+    {
+      title: "Data Structures & Algorithms (DSA) C++",
+      tag: "DSA Course",
+      icon: Grid3x3,
+      description:
+        "Comprehensive DSA track in C++: complexity, arrays, lists, trees, graphs, hashing, sorting, and problem-solving patterns.",
+      href: "/learn/dsa-cpp",
+      accent: "#a78bfa",
+    },
   ],
   "c++": [
     {
@@ -101,6 +110,15 @@ export const languageCourses = {
         "Addresses, dereferencing, nullptr, arrays, 2D arrays, smart pointers, callbacks, and safety.",
       href: "/learn/pointers-cpp",
       accent: "#00d4ff",
+    },
+    {
+      title: "Data Structures & Algorithms (DSA) C++",
+      tag: "DSA Course",
+      icon: Grid3x3,
+      description:
+        "Comprehensive DSA track in C++: complexity, arrays, lists, trees, graphs, hashing, sorting, and problem-solving patterns.",
+      href: "/learn/dsa-cpp",
+      accent: "#a78bfa",
     },
   ],
   python: [
@@ -270,12 +288,14 @@ export const learnNavByLanguage = {
   cpp: [
     { label: "Basics", to: "/learn/cpp-fundamentals" },
     { label: "OOPs", to: "/learn/oops-cpp" },
-    { label: "Pointers", to: "/learn/pointers-cpp" },
+     { label: "Pointers", to: "/learn/pointers-cpp" },
+     { label: "DSA", to: "/learn/dsa-cpp" },
   ],
   "c++": [
     { label: "Basics", to: "/learn/cpp-fundamentals" },
     { label: "OOPs", to: "/learn/oops-cpp" },
-    { label: "Pointers", to: "/learn/pointers-cpp" },
+     { label: "Pointers", to: "/learn/pointers-cpp" },
+     { label: "DSA", to: "/learn/dsa-cpp" },
   ],
   python: [
     { label: "Fundamentals", to: "/learn/python-fundamentals" },
