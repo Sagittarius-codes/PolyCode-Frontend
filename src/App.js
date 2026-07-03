@@ -121,6 +121,12 @@ const PointersHub = lazyWithChunkRetry(
 const PointersLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/pointers-cpp/pages/PointersLessonPage"),
 );
+const DsaHub = lazyWithChunkRetry(
+  () => import("./features/learn/dsa-cpp/pages/DsaHub"),
+);
+const DsaLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/dsa-cpp/pages/DsaLessonPage"),
+);
 const NumpyHub = lazyWithChunkRetry(
   () => import("./features/learn/numpy-py/pages/NumpyHub"),
 );
@@ -142,6 +148,18 @@ const MatplotlibHub = lazyWithChunkRetry(
 );
 const MatplotlibLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/matplotlib-py/pages/MatplotlibLessonPage"),
+);
+const PythonOopHub = lazyWithChunkRetry(
+  () => import("./features/learn/python-oop-py/pages/PythonOopHub"),
+);
+const PythonOopLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/python-oop-py/pages/PythonOopLessonPage"),
+);
+const PythonFileHandlingHub = lazyWithChunkRetry(
+  () => import("./features/learn/python-file-handling-py/pages/PythonFileHandlingHub"),
+);
+const PythonFileHandlingLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/python-file-handling-py/pages/PythonFileHandlingLessonPage"),
 );
 const PandasHub = lazyWithChunkRetry(
   () => import("./features/learn/pandas-py/pages/PandasHub"),
@@ -167,6 +185,12 @@ const JsFundamentalsHub = lazyWithChunkRetry(
 const JsFundamentalsLessonPage = lazyWithChunkRetry(
   () =>
     import("./features/learn/js-fundamentals/pages/JsFundamentalsLessonPage"),
+);
+const JsDomHub = lazyWithChunkRetry(
+  () => import("./features/learn/js-dom/pages/JsDomHub"),
+);
+const JsDomLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/js-dom/pages/JsDomLessonPage"),
 );
 const JsWebDevHub = lazyWithChunkRetry(
   () => import("./features/learn/js-web-dev/pages/JsWebDevHub"),
@@ -201,6 +225,51 @@ const RubyFundamentalsLessonPage = lazyWithChunkRetry(
   () =>
     import("./features/learn/ruby-fundamentals/pages/rubyFundamentalsLessonPage"),
 );
+
+// ─── C Language Courses ───────────────────────────────────────────────────────
+const CFundamentalsHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-fundamentals/pages/CFundamentalsHub"),
+);
+const CFundamentalsLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-fundamentals/pages/CFundamentalsLessonPage"),
+);
+const CFunctionsHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-functions/pages/CFunctionsHub"),
+);
+const CFunctionsLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-functions/pages/CFunctionsLessonPage"),
+);
+const CPointersHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-pointers/pages/CPointersHub"),
+);
+const CPointersLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-pointers/pages/CPointersLessonPage"),
+);
+const CMemoryManagementHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-memory-management/pages/CMemoryManagementHub"),
+);
+const CMemoryManagementLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-memory-management/pages/CMemoryManagementLessonPage"),
+);
+const CFileHandlingHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-file-handling/pages/CFileHandlingHub"),
+);
+const CFileHandlingLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-file-handling/pages/CFileHandlingLessonPage"),
+);
+const CDataStructuresHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-data-structures/pages/CDataStructuresHub"),
+);
+const CDataStructuresLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-data-structures/pages/CDataStructuresLessonPage"),
+);
+const CProjectsHub = lazyWithChunkRetry(
+  () => import("./features/learn/c-projects/pages/CProjectsHub"),
+);
+const CProjectsLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/c-projects/pages/CProjectsLessonPage"),
+);
+// ─────────────────────────────────────────────────────────────────────────────
 
 const PageFallback = () => (
   <div className="loading-overlay">
@@ -555,12 +624,16 @@ function AppRoutes() {
       path.startsWith("/learn/pandas-py") ||
       path.startsWith("/learn/fastapi-py") ||
       path.startsWith("/learn/matplotlib-py") ||
+      path.startsWith("/learn/python-oop-py") ||
+      path.startsWith("/learn/python-file-handling-py") ||
       path.startsWith("/learn/ai_ml-py")
     ) {
       handleLanguageSelect("Python", { stay: true });
-    } else if (path.startsWith("/learn/js-fundamentals")) {
-      handleLanguageSelect("JavaScript", { stay: true });
-    } else if (path.startsWith("/learn/js-web-dev")) {
+    } else if (
+      path.startsWith("/learn/js-fundamentals") ||
+      path.startsWith("/learn/js-dom") ||
+      path.startsWith("/learn/js-web-dev")
+    ) {
       handleLanguageSelect("JavaScript", { stay: true });
     } else if (path.startsWith("/learn/c-sharp-fundamentals")) {
       handleLanguageSelect("C#", { stay: true });
@@ -569,11 +642,22 @@ function AppRoutes() {
     } else if (
       path.startsWith("/learn/cpp-fundamentals") ||
       path.startsWith("/learn/oops-cpp") ||
-      path.startsWith("/learn/pointers-cpp")
+      path.startsWith("/learn/pointers-cpp") ||
+      path.startsWith("/learn/dsa-cpp")
     ) {
       handleLanguageSelect("C++", { stay: true });
     } else if (path.startsWith("/learn/ruby-fundamentals")) {
       handleLanguageSelect("Ruby", { stay: true });
+    } else if (
+      path.startsWith("/learn/c-fundamentals") ||
+      path.startsWith("/learn/c-functions") ||
+      path.startsWith("/learn/c-pointers") ||
+      path.startsWith("/learn/c-memory-management") ||
+      path.startsWith("/learn/c-file-handling") ||
+      path.startsWith("/learn/c-data-structures") ||
+      path.startsWith("/learn/c-projects")
+    ) {
+      handleLanguageSelect("C", { stay: true });
     }
   }, [location.pathname, handleLanguageSelect]);
 
@@ -750,6 +834,51 @@ function AppRoutes() {
                 selectedLanguage={selectedLanguage}
               >
                 <PointersLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/dsa-cpp"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <DsaHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/dsa-cpp/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <DsaLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/dsa-cpp/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <DsaLessonPage />
               </LearnShell>
             </ThemedShell>
           }
@@ -982,7 +1111,6 @@ function AppRoutes() {
             </ThemedShell>
           }
         />
-
         <Route
           path="/learn/matplotlib-py/lesson/:lessonId"
           element={
@@ -994,6 +1122,66 @@ function AppRoutes() {
                 selectedLanguage={selectedLanguage}
               >
                 <MatplotlibLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/python-oop-py"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PythonOopHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/python-oop-py/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PythonOopLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/python-file-handling-py"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PythonFileHandlingHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/python-file-handling-py/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PythonFileHandlingLessonPage />
               </LearnShell>
             </ThemedShell>
           }
@@ -1043,7 +1231,6 @@ function AppRoutes() {
             </ThemedShell>
           }
         />
-
         <Route
           path="/learn/js-fundamentals"
           element={
@@ -1089,7 +1276,6 @@ function AppRoutes() {
             </ThemedShell>
           }
         />
-
         <Route
           path="/learn/js-web-dev"
           element={
@@ -1135,7 +1321,51 @@ function AppRoutes() {
             </ThemedShell>
           }
         />
-
+        <Route
+          path="/learn/js-dom"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <JsDomHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/js-dom/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <JsDomLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/js-dom/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <JsDomLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
         <Route
           path="/learn/c-sharp-fundamentals"
           element={
@@ -1224,7 +1454,7 @@ function AppRoutes() {
             </ThemedShell>
           }
         />
-         <Route
+        <Route
           path="/learn/ruby-fundamentals"
           element={
             <ThemedShell theme={theme}>
@@ -1269,6 +1499,220 @@ function AppRoutes() {
             </ThemedShell>
           }
         />
+
+        {/* ─── C Language Course Routes ──────────────────────────────────────── */}
+        <Route
+          path="/learn/c-fundamentals"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CFundamentalsHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-fundamentals/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CFundamentalsLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-functions"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CFunctionsHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-functions/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CFunctionsLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-pointers"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CPointersHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-pointers/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CPointersLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-memory-management"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CMemoryManagementHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-memory-management/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CMemoryManagementLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-file-handling"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CFileHandlingHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-file-handling/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CFileHandlingLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-data-structures"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CDataStructuresHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-data-structures/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CDataStructuresLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-projects"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CProjectsHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/c-projects/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <CProjectsLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        {/* ─────────────────────────────────────────────────────────────────── */}
+
       </Routes>
     </Suspense>
   );

@@ -11,6 +11,11 @@ import {
   Presentation,
   BrainCircuit,
   Server,
+  Cpu,
+  HardDrive,
+  FolderOpen,
+  Database,
+  Wrench,
 } from "lucide-react";
 
 export function languageKey(value = "") {
@@ -45,6 +50,71 @@ export const generalCourses = [
 
 /** Interactive courses shown on /language/:language (language-specific only). */
 export const languageCourses = {
+  c: [
+    {
+      title: "C Fundamentals",
+      tag: "Core Course",
+      icon: Terminal,
+      description:
+        "Variables, data types, operators, control flow, and I/O — the solid foundation every C programmer needs.",
+      href: "/learn/c-fundamentals",
+      accent: "#659ad2",
+    },
+    {
+      title: "C Functions",
+      tag: "Core Course",
+      icon: Wrench,
+      description:
+        "Declare, call, and compose functions — pass by value, recursion, scope, and function pointers.",
+      href: "/learn/c-functions",
+      accent: "#e67e22",
+    },
+    {
+      title: "C Pointers",
+      tag: "Memory Course",
+      icon: Cpu,
+      description:
+        "Addresses, dereferencing, pointer arithmetic, arrays, strings, and double pointers.",
+      href: "/learn/c-pointers",
+      accent: "#e74c3c",
+    },
+    {
+      title: "C Memory Management",
+      tag: "Memory Course",
+      icon: HardDrive,
+      description:
+        "Stack vs heap, malloc, calloc, realloc, free — manage memory safely and avoid leaks.",
+      href: "/learn/c-memory-management",
+      accent: "#8e44ad",
+    },
+    {
+      title: "C File Handling",
+      tag: "I/O Course",
+      icon: FolderOpen,
+      description:
+        "Open, read, write, seek, and close files — persist data beyond your program's lifetime.",
+      href: "/learn/c-file-handling",
+      accent: "#27ae60",
+    },
+    {
+      title: "C Data Structures",
+      tag: "Advanced Course",
+      icon: Database,
+      description:
+        "Arrays, linked lists, stacks, queues, trees, and sorting — classic structures in pure C.",
+      href: "/learn/c-data-structures",
+      accent: "#2980b9",
+    },
+    {
+      title: "C Projects",
+      tag: "Projects Course",
+      icon: Boxes,
+      description:
+        "Real-world C programs — calculator, student records, file-based to-do app, and a full capstone.",
+      href: "/learn/c-projects",
+      accent: "#f39c12",
+    },
+  ],
   cpp: [
     {
       title: "C++ Fundamentals",
@@ -72,6 +142,15 @@ export const languageCourses = {
         "Addresses, dereferencing, nullptr, arrays, 2D arrays, smart pointers, callbacks, and safety.",
       href: "/learn/pointers-cpp",
       accent: "#00d4ff",
+    },
+    {
+      title: "DSA C++",
+      tag: "Advanced Course",
+      icon: Database,
+      description:
+        "Data structures and algorithms in C++: arrays, linked lists, trees, graphs, dynamic programming, and performance-focused problem solving.",
+      href: "/learn/dsa-cpp",
+      accent: "#22c55e",
     },
   ],
   "c++": [
@@ -102,6 +181,15 @@ export const languageCourses = {
       href: "/learn/pointers-cpp",
       accent: "#00d4ff",
     },
+    {
+      title: "DSA C++",
+      tag: "Advanced Course",
+      icon: Database,
+      description:
+        "Data structures and algorithms in C++: arrays, linked lists, trees, graphs, dynamic programming, and performance-focused problem solving.",
+      href: "/learn/dsa-cpp",
+      accent: "#22c55e",
+    },
   ],
   python: [
     {
@@ -112,6 +200,24 @@ export const languageCourses = {
         "Beginner → Pro: syntax, types, control flow, collections, functions, files, OOP basics, and modern Python habits — 8 chapters with hands-on challenges.",
       href: "/learn/python-fundamentals",
       accent: "#3776ab",
+    },
+    {
+      title: "Python OOP · py",
+      tag: "Core Course",
+      icon: Boxes,
+      description:
+        "Beginner → Pro: classes, encapsulation, inheritance, polymorphism, design patterns, capstone project, and cheat sheet — 8 chapters, 25 lessons.",
+      href: "/learn/python-oop-py",
+      accent: "#7c3aed",
+    },
+    {
+      title: "File Handling · py",
+      tag: "Core Course",
+      icon: FolderOpen,
+      description:
+        "Beginner → Pro: open(), pathlib, CSV, JSON, safe I/O, binary files, logging, ETL capstone, and cheat sheet — 8 chapters, 25 lessons.",
+      href: "/learn/python-file-handling-py",
+      accent: "#0891b2",
     },
     {
       title: "NumPy · py",
@@ -170,11 +276,20 @@ export const languageCourses = {
       accent: "#f59e0b",
     },
     {
+      title: "JavaScript DOM",
+      tag: "DOM Course",
+      icon: Globe,
+      description:
+        "Build interactive browser pages with the Document Object Model: select elements, update content, handle events, and create dynamic UI safely.",
+      href: "/learn/js-dom",
+      accent: "#22c55e",
+    },
+    {
       title: "JavaScript Web Development",
       tag: "Web Course",
       icon: Globe,
       description:
-        "Beginner to advanced browser track: DOM, events, forms, fetch, storage, performance, routing, a11y, security, and capstone projects.",
+        "Beginner to advanced browser track: DOM, events, forms, fetch, storage, performance, routing, accessibility, security, and capstone projects.",
       href: "/learn/js-web-dev",
       accent: "#22c55e",
     },
@@ -221,12 +336,18 @@ export const languageCourses = {
         "Foundational Ruby Programming: expressive syntax, block-based iteration, dynamic typing, core object-oriented principles, modules and mixins, error handling, and file I/O operations.",
       href: "/learn/ruby-fundamentals",
       accent: "#701516",
-    }
-  ]
+    },
+  ],
 };
 
 /** Ordered stacks for navbar grouping (one row per language, sub-courses inside). */
 export const courseStackGroups = [
+  {
+    id: "c",
+    label: "C",
+    accent: "#659ad2",
+    languagePath: "/language/C",
+  },
   {
     id: "cpp",
     label: "C++",
@@ -267,18 +388,31 @@ export const courseStackGroups = [
 
 /** Navbar learn links per language (mirrors languageCourses). */
 export const learnNavByLanguage = {
+  c: [
+    { label: "Fundamentals", to: "/learn/c-fundamentals" },
+    { label: "Functions", to: "/learn/c-functions" },
+    { label: "Pointers", to: "/learn/c-pointers" },
+    { label: "Memory", to: "/learn/c-memory-management" },
+    { label: "File I/O", to: "/learn/c-file-handling" },
+    { label: "Data Structures", to: "/learn/c-data-structures" },
+    { label: "Projects", to: "/learn/c-projects" },
+  ],
   cpp: [
     { label: "Basics", to: "/learn/cpp-fundamentals" },
     { label: "OOPs", to: "/learn/oops-cpp" },
     { label: "Pointers", to: "/learn/pointers-cpp" },
+    { label: "DSA", to: "/learn/dsa-cpp" },
   ],
   "c++": [
     { label: "Basics", to: "/learn/cpp-fundamentals" },
     { label: "OOPs", to: "/learn/oops-cpp" },
     { label: "Pointers", to: "/learn/pointers-cpp" },
+    { label: "DSA", to: "/learn/dsa-cpp" },
   ],
   python: [
     { label: "Fundamentals", to: "/learn/python-fundamentals" },
+    { label: "OOP", to: "/learn/python-oop-py" },
+    { label: "File I/O", to: "/learn/python-file-handling-py" },
     { label: "NumPy", to: "/learn/numpy-py" },
     { label: "Pandas", to: "/learn/pandas-py" },
     { label: "FastAPI", to: "/learn/fastapi-py" },
@@ -287,6 +421,7 @@ export const learnNavByLanguage = {
   ],
   javascript: [
     { label: "Fundamentals", to: "/learn/js-fundamentals" },
+    { label: "DOM", to: "/learn/js-dom" },
     { label: "Web Dev", to: "/learn/js-web-dev" },
   ],
   php: [{ label: "PHP Basics", to: "/learn/php-fundamentals" }],
@@ -307,14 +442,28 @@ function normalizeLearnNavLanguageKey(key = "") {
 /** Infer stack from an active /learn/* route when language is not set. */
 export function inferLanguageFromLearnPath(pathname = "") {
   if (
+    pathname.startsWith("/learn/c-fundamentals") ||
+    pathname.startsWith("/learn/c-functions") ||
+    pathname.startsWith("/learn/c-pointers") ||
+    pathname.startsWith("/learn/c-memory-management") ||
+    pathname.startsWith("/learn/c-file-handling") ||
+    pathname.startsWith("/learn/c-data-structures") ||
+    pathname.startsWith("/learn/c-projects")
+  ) {
+    return "c";
+  }
+  if (
     pathname.startsWith("/learn/cpp-fundamentals") ||
     pathname.startsWith("/learn/oops-cpp") ||
-    pathname.startsWith("/learn/pointers-cpp")
+    pathname.startsWith("/learn/pointers-cpp") ||
+    pathname.startsWith("/learn/dsa-cpp")
   ) {
     return "cpp";
   }
   if (
     pathname.startsWith("/learn/python-fundamentals") ||
+    pathname.startsWith("/learn/python-oop-py") ||
+    pathname.startsWith("/learn/python-file-handling-py") ||
     pathname.startsWith("/learn/numpy-py") ||
     pathname.startsWith("/learn/pandas-py") ||
     pathname.startsWith("/learn/fastapi-py") ||
@@ -325,6 +474,7 @@ export function inferLanguageFromLearnPath(pathname = "") {
   }
   if (
     pathname.startsWith("/learn/js-fundamentals") ||
+    pathname.startsWith("/learn/js-dom") ||
     pathname.startsWith("/learn/js-web-dev")
   ) {
     return "javascript";
@@ -369,7 +519,9 @@ export function getActiveLearnNavGroup(selectedLanguage, pathname = "") {
     id: stackKey,
     label: stack?.label || selectedLanguage || stackKey,
     accent: stack?.accent,
-    languagePath: stack?.languagePath || `/language/${selectedLanguage || stack?.label || ""}`,
+    languagePath:
+      stack?.languagePath ||
+      `/language/${selectedLanguage || stack?.label || ""}`,
     courses,
   };
 }
