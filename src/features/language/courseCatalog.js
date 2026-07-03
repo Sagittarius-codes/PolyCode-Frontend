@@ -143,6 +143,15 @@ export const languageCourses = {
       href: "/learn/pointers-cpp",
       accent: "#00d4ff",
     },
+    {
+      title: "DSA C++",
+      tag: "Advanced Course",
+      icon: Database,
+      description:
+        "Data structures and algorithms in C++: arrays, linked lists, trees, graphs, dynamic programming, and performance-focused problem solving.",
+      href: "/learn/dsa-cpp",
+      accent: "#22c55e",
+    },
   ],
   "c++": [
     {
@@ -172,6 +181,15 @@ export const languageCourses = {
       href: "/learn/pointers-cpp",
       accent: "#00d4ff",
     },
+    {
+      title: "DSA C++",
+      tag: "Advanced Course",
+      icon: Database,
+      description:
+        "Data structures and algorithms in C++: arrays, linked lists, trees, graphs, dynamic programming, and performance-focused problem solving.",
+      href: "/learn/dsa-cpp",
+      accent: "#22c55e",
+    },
   ],
   python: [
     {
@@ -182,6 +200,24 @@ export const languageCourses = {
         "Beginner → Pro: syntax, types, control flow, collections, functions, files, OOP basics, and modern Python habits — 8 chapters with hands-on challenges.",
       href: "/learn/python-fundamentals",
       accent: "#3776ab",
+    },
+    {
+      title: "Python OOP · py",
+      tag: "Core Course",
+      icon: Boxes,
+      description:
+        "Beginner → Pro: classes, encapsulation, inheritance, polymorphism, design patterns, capstone project, and cheat sheet — 8 chapters, 25 lessons.",
+      href: "/learn/python-oop-py",
+      accent: "#7c3aed",
+    },
+    {
+      title: "File Handling · py",
+      tag: "Core Course",
+      icon: FolderOpen,
+      description:
+        "Beginner → Pro: open(), pathlib, CSV, JSON, safe I/O, binary files, logging, ETL capstone, and cheat sheet — 8 chapters, 25 lessons.",
+      href: "/learn/python-file-handling-py",
+      accent: "#0891b2",
     },
     {
       title: "NumPy · py",
@@ -240,11 +276,20 @@ export const languageCourses = {
       accent: "#f59e0b",
     },
     {
+      title: "JavaScript DOM",
+      tag: "DOM Course",
+      icon: Globe,
+      description:
+        "Build interactive browser pages with the Document Object Model: select elements, update content, handle events, and create dynamic UI safely.",
+      href: "/learn/js-dom",
+      accent: "#22c55e",
+    },
+    {
       title: "JavaScript Web Development",
       tag: "Web Course",
       icon: Globe,
       description:
-        "Beginner to advanced browser track: DOM, events, forms, fetch, storage, performance, routing, a11y, security, and capstone projects.",
+        "Beginner to advanced browser track: DOM, events, forms, fetch, storage, performance, routing, accessibility, security, and capstone projects.",
       href: "/learn/js-web-dev",
       accent: "#22c55e",
     },
@@ -356,14 +401,18 @@ export const learnNavByLanguage = {
     { label: "Basics", to: "/learn/cpp-fundamentals" },
     { label: "OOPs", to: "/learn/oops-cpp" },
     { label: "Pointers", to: "/learn/pointers-cpp" },
+    { label: "DSA", to: "/learn/dsa-cpp" },
   ],
   "c++": [
     { label: "Basics", to: "/learn/cpp-fundamentals" },
     { label: "OOPs", to: "/learn/oops-cpp" },
     { label: "Pointers", to: "/learn/pointers-cpp" },
+    { label: "DSA", to: "/learn/dsa-cpp" },
   ],
   python: [
     { label: "Fundamentals", to: "/learn/python-fundamentals" },
+    { label: "OOP", to: "/learn/python-oop-py" },
+    { label: "File I/O", to: "/learn/python-file-handling-py" },
     { label: "NumPy", to: "/learn/numpy-py" },
     { label: "Pandas", to: "/learn/pandas-py" },
     { label: "FastAPI", to: "/learn/fastapi-py" },
@@ -372,6 +421,7 @@ export const learnNavByLanguage = {
   ],
   javascript: [
     { label: "Fundamentals", to: "/learn/js-fundamentals" },
+    { label: "DOM", to: "/learn/js-dom" },
     { label: "Web Dev", to: "/learn/js-web-dev" },
   ],
   php: [{ label: "PHP Basics", to: "/learn/php-fundamentals" }],
@@ -405,12 +455,15 @@ export function inferLanguageFromLearnPath(pathname = "") {
   if (
     pathname.startsWith("/learn/cpp-fundamentals") ||
     pathname.startsWith("/learn/oops-cpp") ||
-    pathname.startsWith("/learn/pointers-cpp")
+    pathname.startsWith("/learn/pointers-cpp") ||
+    pathname.startsWith("/learn/dsa-cpp")
   ) {
     return "cpp";
   }
   if (
     pathname.startsWith("/learn/python-fundamentals") ||
+    pathname.startsWith("/learn/python-oop-py") ||
+    pathname.startsWith("/learn/python-file-handling-py") ||
     pathname.startsWith("/learn/numpy-py") ||
     pathname.startsWith("/learn/pandas-py") ||
     pathname.startsWith("/learn/fastapi-py") ||
@@ -421,6 +474,7 @@ export function inferLanguageFromLearnPath(pathname = "") {
   }
   if (
     pathname.startsWith("/learn/js-fundamentals") ||
+    pathname.startsWith("/learn/js-dom") ||
     pathname.startsWith("/learn/js-web-dev")
   ) {
     return "javascript";
