@@ -271,6 +271,7 @@ export default function LessonPage() {
         </div>
 
         <LessonContentShell
+          tab={tab}
           storageKey={`oops-cpp:${lessonId}`}
           videoUrl={lesson.videoUrl}
           videoTitle={`${lesson.title} — OOP C++`}

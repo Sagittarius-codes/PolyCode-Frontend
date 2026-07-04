@@ -257,6 +257,7 @@ export default function PointersLessonPage() {
         </div>
 
         <LessonContentShell
+          tab={tab}
           storageKey={`pointers-cpp:${lessonId}`}
           videoUrl={lesson.videoUrl}
           videoTitle={`${lesson.title} — Pointers C++`}

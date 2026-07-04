@@ -182,6 +182,7 @@ export default function NumpyLessonPage() {
         </div>
 
         <LessonContentShell
+          tab={tab}
           storageKey={`numpy-py:${lessonId}`}
           videoUrl={lesson.videoUrl}
           videoTitle={`${lesson.title} — NumPy`}
