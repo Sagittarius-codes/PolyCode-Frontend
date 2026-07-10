@@ -125,7 +125,8 @@ const CppFundamentalsHub = lazyWithChunkRetry(
   () => import("./features/learn/cpp-fundamentals/pages/CppFundamentalsHub"),
 );
 const CppFundamentalsLessonPage = lazyWithChunkRetry(
-  () => import("./features/learn/cpp-fundamentals/pages/CppFundamentalsLessonPage"),
+  () =>
+    import("./features/learn/cpp-fundamentals/pages/CppFundamentalsLessonPage"),
 );
 const NumpyHub = lazyWithChunkRetry(
   () => import("./features/learn/numpy-py/pages/NumpyHub"),
@@ -181,13 +182,11 @@ const JavaIntermediateLessonPage = lazyWithChunkRetry(
 );
 // ── CONFLICT RESOLVED: kept JavaCollections from PR #193 (main) ──
 const JavaCollectionsHub = lazyWithChunkRetry(
-  () => import('./features/learn/java-collections/pages/JavaCollectionsHub'),
+  () => import("./features/learn/java-collections/pages/JavaCollectionsHub"),
 );
 const JavaCollectionsLessonPage = lazyWithChunkRetry(
   () =>
-    import(
-      './features/learn/java-intermediate/pages/JavaIntermediateLessonPage'
-    ),
+    import("./features/learn/java-intermediate/pages/JavaIntermediateLessonPage"),
 );
 
 const JavaFundamentalsHub = lazyWithChunkRetry(
@@ -210,9 +209,7 @@ const HtmlCssFoundationHub = lazyWithChunkRetry(
 );
 const HtmlCssFoundationLessonPage = lazyWithChunkRetry(
   () =>
-    import(
-      "./features/learn/html-css-foundation/pages/HtmlCssFoundationLessonPage"
-    ),
+    import("./features/learn/html-css-foundation/pages/HtmlCssFoundationLessonPage"),
 );
 
 // ─── C Language Courses ───────────────────────────────────────────────────────
@@ -235,22 +232,26 @@ const CPointersLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/c-pointers/pages/CPointersLessonPage"),
 );
 const CMemoryManagementHub = lazyWithChunkRetry(
-  () => import("./features/learn/c-memory-management/pages/CMemoryManagementHub"),
+  () =>
+    import("./features/learn/c-memory-management/pages/CMemoryManagementHub"),
 );
 const CMemoryManagementLessonPage = lazyWithChunkRetry(
-  () => import("./features/learn/c-memory-management/pages/CMemoryManagementLessonPage"),
+  () =>
+    import("./features/learn/c-memory-management/pages/CMemoryManagementLessonPage"),
 );
 const CFileHandlingHub = lazyWithChunkRetry(
   () => import("./features/learn/c-file-handling/pages/CFileHandlingHub"),
 );
 const CFileHandlingLessonPage = lazyWithChunkRetry(
-  () => import("./features/learn/c-file-handling/pages/CFileHandlingLessonPage"),
+  () =>
+    import("./features/learn/c-file-handling/pages/CFileHandlingLessonPage"),
 );
 const CDataStructuresHub = lazyWithChunkRetry(
   () => import("./features/learn/c-data-structures/pages/CDataStructuresHub"),
 );
 const CDataStructuresLessonPage = lazyWithChunkRetry(
-  () => import("./features/learn/c-data-structures/pages/CDataStructuresLessonPage"),
+  () =>
+    import("./features/learn/c-data-structures/pages/CDataStructuresLessonPage"),
 );
 const CProjectsHub = lazyWithChunkRetry(
   () => import("./features/learn/c-projects/pages/CProjectsHub"),
@@ -258,7 +259,16 @@ const CProjectsHub = lazyWithChunkRetry(
 const CProjectsLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/c-projects/pages/CProjectsLessonPage"),
 );
-// ─────────────────────────────────────────────────────────────────────────────
+// ──── Go Language ─────────────────────────────────────────────────────────────────────────
+
+const GoLangHub = lazyWithChunkRetry(
+  () => import("./features/learn/golang-fundamentals/pages/GoFundamentalsHub"),
+);
+
+const GoLangLessonPage = lazyWithChunkRetry(
+  () =>
+    import("./features/learn/golang-fundamentals/pages/GoFundamentalsLessonPage"),
+);
 
 const PageFallback = () => (
   <div className="loading">
@@ -640,6 +650,8 @@ function AppRoutes() {
       path.startsWith("/learn/cpp-fundamentals")
     ) {
       handleLanguageSelect("C++", { stay: true });
+    } else if (path.startsWith("/learn/golang-fundamentals")) {
+      handleLanguageSelect("go", { stay: true });
     } else if (
       path.startsWith("/learn/c-fundamentals") ||
       path.startsWith("/learn/c-functions") ||
@@ -1628,7 +1640,53 @@ function AppRoutes() {
           }
         />
         {/* ─────────────────────────────────────────────────────────────── */}
-
+        {/* ─── Go Language Course Routes ─────────────────────────────────────── */}
+        <Route
+          path="/learn/golang-fundamentals"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <GoLangHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/golang-fundamentals/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <GoLangLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/golang-fundamentals/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <GoLangLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+      {/* ─────────────────────────────────────────────────────────────── */}
         <Route path="/profile" element={<ProfileRedirect />} />
         <Route
           path="/*"
