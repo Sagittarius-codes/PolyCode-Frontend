@@ -353,7 +353,7 @@ export const languageCourses = {
   java: [
     {
       title: "Java Fundamentals",
-      tag: "Interactive Course",
+      tag: "Core Course",
       icon: Coffee,
       description:
         "Variables, control flow, OOP, collections, and modern Java — with theory, quizzes, and real challenges compiled by javac in your browser.",
@@ -362,7 +362,7 @@ export const languageCourses = {
     },
     {
       title: "Java OOP",
-      tag: "Interactive Course",
+      tag: "OOP Course",
       icon: Boxes,
       description:
         "Abstract classes, polymorphism, interfaces, generics, collections, File I/O, Streams, Optional, and Records.",
@@ -371,7 +371,7 @@ export const languageCourses = {
     },
     {
       title: "Java Exception Handling",
-      tag: "Interactive Course",
+      tag: "Error Handling Course",
       icon: Terminal,
       description:
         "Checked and unchecked exceptions, custom exceptions, try-with-resources, chaining, and real-world error handling patterns.",
@@ -380,7 +380,7 @@ export const languageCourses = {
     },
     {
       title: "Java Multithreading",
-      tag: "Interactive Course",
+      tag: "Concurrency Course",
       icon: Layers3,
       description:
         "Threads, synchronization, atomic classes, ExecutorService, concurrent collections, CompletableFuture, and deadlock prevention.",
@@ -389,7 +389,7 @@ export const languageCourses = {
     },
     {
       title: "Java JDBC",
-      tag: "Interactive Course",
+      tag: "Databases Course",
       icon: Database,
       description:
         "Connect to databases with JDBC, PreparedStatement, transactions, batch updates, and the DAO pattern — with real, runnable challenges compiled by javac.",
@@ -398,7 +398,7 @@ export const languageCourses = {
     },
     {
       title: "Java Spring Boot",
-      tag: "Interactive Course",
+      tag: "Frameword Course",
       icon: Grid3x3,
       description:
         "Build REST APIs with Spring Boot: controllers, dependency injection, services, Spring Data JPA, and DTOs — with theory, quizzes, and real coding challenges.",
@@ -407,7 +407,7 @@ export const languageCourses = {
     },
     {
       title: "Java Projects",
-      tag: "Interactive Course",
+      tag: "Capstone Course",
       icon: Brain,
       description:
         "Build 4 real, growing projects — a task manager, a library system, a bank system, and an e-commerce backend — applying everything from Fundamentals to Spring Boot.",
