@@ -20,7 +20,9 @@ import {
 } from "lucide-react";
 
 export function languageKey(value = "") {
-  return value.toLowerCase().replace(/\s+/g, "");
+  const normalized = value.toLowerCase().replace(/\s+/g, "");
+  if (normalized === "html&css") return "htmlcss";
+  return normalized;
 }
 
 export const generalCourses = [
@@ -304,6 +306,17 @@ export const languageCourses = {
       accent: "#339933",
     },
   ],
+  htmlcss: [
+    {
+      title: "HTML & CSS Foundation",
+      tag: "Web Foundation",
+      icon: Globe,
+      description:
+        "Short foundation course for semantic HTML, CSS styling, responsive layout, and Bootstrap utilities with runnable examples.",
+      href: "/learn/html-css-foundation",
+      accent: "#0ea5e9",
+    },
+  ],
   php: [
     {
       title: "PHP Fundamentals",
@@ -340,21 +353,30 @@ export const languageCourses = {
   java: [
     {
       title: "Java Fundamentals",
-      tag: "Beginner Course",
+      tag: "Core Course",
       icon: Coffee,
       description:
-        "Java syntax, variables, control flow, methods, arrays, classes, strings, and user input — everything to write real Java from scratch.",
-      href: "/hub?language=Java&category=01-beginner",
+        "Variables, control flow, OOP, collections, and modern Java — with theory, quizzes, and real challenges compiled by javac in your browser.",
+      href: "/learn/java-fundamentals",
       accent: "#e76f00",
     },
     {
-      title: "Java Intermediate",
-      tag: "OOP Course",
+      title: "Java OOP",
+      tag: "Core Course",
       icon: Boxes,
       description:
-        "Inheritance, interfaces, collections, exception handling, generics, and file I/O — the core pillars of professional Java.",
-      href: "/hub?language=Java&category=02-intermediate",
+        "OOP, interfaces, generics, collections, exceptions, File I/O, Streams, Optional, Records — the core pillars of professional Java.",
+      href: "/learn/java-intermediate",
       accent: "#f59e0b",
+    },
+    {
+      title: "Java Collections",
+      tag: "Core Course",
+      icon: Database,
+      description:
+        "Lists, Sets, Maps, TreeMap/TreeSet, sorting with Comparable and Comparator, and the Stream API — with real challenges compiled by javac.",
+      href: "/learn/java-collections",
+      accent: "#06b6d4",
     },
     {
       title: "Java Advanced",
@@ -362,7 +384,7 @@ export const languageCourses = {
       icon: Layers3,
       description:
         "Streams API, lambda expressions, multithreading, Optional, and JDBC — write fast, modern, production-ready Java.",
-      href: "/hub?language=Java&category=03-advanced",
+      href: "/learn/java-advanced",
       accent: "#3b82f6",
     },
     {
@@ -371,7 +393,7 @@ export const languageCourses = {
       icon: Grid3x3,
       description:
         "Build REST APIs with Spring Boot, Spring Data JPA, Maven, request validation, and unit testing with JUnit and Mockito.",
-      href: "/hub?language=Java&category=04-professional",
+      href: "/category/04-professional?language=Java",
       accent: "#22c55e",
     },
     {
@@ -380,7 +402,7 @@ export const languageCourses = {
       icon: Brain,
       description:
         "Algorithms, data structures, design patterns, Big-O analysis, and full interview preparation to become a confident Java developer.",
-      href: "/hub?language=Java&category=05-mastery",
+      href: "/category/05-mastery?language=Java",
       accent: "#a855f7",
     },
   ],
@@ -404,7 +426,7 @@ export const languageCourses = {
       accent: "#9333ea",
     },
   ],
-  // ─── ADD GO TRACK DEFINITION ────────────────────────────────────────────────
+  // ─── GO TRACK DEFINITION ────────────────────────────────────────────────
   go: [
     {
       title: "Go Fundamentals",
@@ -416,6 +438,94 @@ export const languageCourses = {
       accent: "#00add8",
     },
   ],
+  // ─── RUST TRACK DEFINITION ──────────────────────────────────────────────
+  rust: [
+    {
+      title: "Rust Fundamentals",
+      tag: "Core Track",
+      icon: Terminal,
+      description:
+        "Master zero-cost abstractions, strict default immutability, ownership move semantics, borrow-checker rules, and exhaustive pattern matching.",
+      href: "/learn/rust-fundamentals",
+      accent: "#ce412b",
+    },
+  ],
+  // ─── SQL TRACK DEFINITION ──────────────────────────────────────────────
+  sql: [
+    {
+      title: "SQL Fundamentals",
+      tag: "Core Course",
+      icon: Database,
+      description: "Learn database basics, tables, and simple queries.",
+      href: "/learn/sql-fundamentals",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Queries",
+      tag: "Core Course",
+      icon: FileText,
+      description: "Master SELECT, WHERE, ORDER BY, and limiting results.",
+      href: "/learn/sql-queries",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Joins",
+      tag: "Intermediate",
+      icon: Layers3,
+      description: "INNER, OUTER, LEFT, RIGHT joins and linking tables.",
+      href: "/learn/sql-joins",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Aggregate Functions",
+      tag: "Intermediate",
+      icon: Grid3x3,
+      description: "COUNT, SUM, AVG, GROUP BY, and HAVING clauses.",
+      href: "/learn/sql-aggregate-functions",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Subqueries",
+      tag: "Intermediate",
+      icon: Boxes,
+      description: "Nested queries, IN, EXISTS, and complex filtering.",
+      href: "/learn/sql-subqueries",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Views",
+      tag: "Advanced",
+      icon: Globe,
+      description: "Create, update, and manage virtual tables.",
+      href: "/learn/sql-views",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Indexes",
+      tag: "Advanced",
+      icon: HardDrive,
+      description: "Optimize database performance with indexing strategies.",
+      href: "/learn/sql-indexes",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Stored Procedures",
+      tag: "Advanced",
+      icon: Server,
+      description: "Write reusable logic with procedures and triggers.",
+      href: "/learn/sql-stored-procedures",
+      accent: "#f29111",
+    },
+    {
+      title: "SQL Projects",
+      tag: "Projects",
+      icon: Wrench,
+      description: "Build full database schemas for real-world scenarios.",
+      href: "/learn/sql-projects",
+      accent: "#f29111",
+    },
+  ],
+
 };
 
 /** Ordered stacks for navbar grouping (one row per language, sub-courses inside). */
@@ -439,10 +549,22 @@ export const courseStackGroups = [
     languagePath: "/language/Python",
   },
   {
+    id: "java",
+    label: "Java",
+    accent: "#e76f00",
+    languagePath: "/language/Java",
+  },
+  {
     id: "javascript",
     label: "JavaScript",
     accent: "#f7df1e",
     languagePath: "/language/JavaScript",
+  },
+  {
+    id: "htmlcss",
+    label: "HTML & CSS",
+    accent: "#0ea5e9",
+    languagePath: "/language/HTML%20%26%20CSS",
   },
   {
     id: "csharp",
@@ -462,12 +584,23 @@ export const courseStackGroups = [
     accent: "#701516",
     languagePath: "/language/Ruby",
   },
-  // ─── ADD GO STACK GROUP ────────────────────────────────────────────────────
   {
     id: "go",
     label: "Go",
     accent: "#00add8",
     languagePath: "/language/Go",
+  },
+  {
+    id: "rust",
+    label: "Rust",
+    accent: "#ce412b",
+    languagePath: "/language/Rust",
+  },
+  {
+    id: "sql",
+    label: "SQL",
+    accent: "#f29111",
+    languagePath: "/language/SQL",
   },
 ];
 
@@ -510,12 +643,16 @@ export const learnNavByLanguage = {
     { label: "Web Dev", to: "/learn/js-web-dev" },
     { label: "Node & npm", to: "/learn/node-npm" },
   ],
+  htmlcss: [
+    { label: "HTML & CSS", to: "/learn/html-css-foundation" },
+  ],
   java: [
-    { label: "Fundamentals", to: "/hub?language=Java&category=01-beginner" },
-    { label: "Intermediate", to: "/hub?language=Java&category=02-intermediate" },
-    { label: "Advanced", to: "/hub?language=Java&category=03-advanced" },
-    { label: "Spring Boot", to: "/hub?language=Java&category=04-professional" },
-    { label: "Mastery", to: "/hub?language=Java&category=05-mastery" },
+    { label: "Java Fundamentals", to: "/learn/java-fundamentals" },
+    { label: "Java OOP", to: "/learn/java-intermediate" },
+    { label: "Java Collections", to: "/learn/java-collections" },
+    { label: "Java Advanced", to: "/learn/java-advanced" },
+    { label: "Spring Boot", to: "/category/04-professional?language=Java" },
+    { label: "Mastery", to: "/category/05-mastery?language=Java" },
   ],
   php: [{ label: "PHP Basics", to: "/learn/php-fundamentals" }],
   csharp: [{ label: "C# Basics", to: "/learn/c-sharp-fundamentals" }],
@@ -524,13 +661,26 @@ export const learnNavByLanguage = {
     { label: "Ruby Basics", to: "/learn/ruby-fundamentals" },
     { label: "Ruby Gems", to: "/learn/ruby-gems" },
   ],
-  // ─── ADD GO NAVIGATION ENTRIES ─────────────────────────────────────────────
   go: [{ label: "Go Basics", to: "/learn/golang-fundamentals" }],
+  rust: [{ label: "Rust Basics", to: "/learn/rust-fundamentals" }],
+  sql: [
+    { label: "Fundamentals", to: "/learn/sql-fundamentals" },
+    { label: "Queries", to: "/learn/sql-queries" },
+    { label: "Joins", to: "/learn/sql-joins" },
+    { label: "Aggregates", to: "/learn/sql-aggregate-functions" },
+    { label: "Subqueries", to: "/learn/sql-subqueries" },
+    { label: "Views", to: "/learn/sql-views" },
+    { label: "Indexes", to: "/learn/sql-indexes" },
+    { label: "Procedures", to: "/learn/sql-stored-procedures" },
+    { label: "Projects", to: "/learn/sql-projects" },
+  ],
 };
 
 const learnNavLanguageAliases = {
   "c++": "cpp",
   "c#": "csharp",
+  "html&css": "htmlcss",
+  htmlCss: "htmlcss",
 };
 
 function normalizeLearnNavLanguageKey(key = "") {
@@ -578,6 +728,9 @@ export function inferLanguageFromLearnPath(pathname = "") {
   ) {
     return "javascript";
   }
+  if (pathname.startsWith("/learn/html-css-foundation")) {
+    return "htmlcss";
+  }
   if (pathname.startsWith("/learn/php-fundamentals")) {
     return "php";
   }
@@ -590,9 +743,32 @@ export function inferLanguageFromLearnPath(pathname = "") {
   if (pathname.startsWith("/learn/c-sharp-fundamentals")) {
     return "csharp";
   }
-  // ─── ADD GO ROUTE INFERENCE ────────────────────────────────────────────────
   if (pathname.startsWith("/learn/golang-fundamentals")) {
     return "go";
+  }
+  if (pathname.startsWith("/learn/rust-fundamentals")){
+    return "rust";
+  }
+  if (
+    pathname.startsWith("/learn/sql-fundamentals") ||
+    pathname.startsWith("/learn/sql-queries") ||
+    pathname.startsWith("/learn/sql-joins") ||
+    pathname.startsWith("/learn/sql-aggregate-functions") ||
+    pathname.startsWith("/learn/sql-subqueries") ||
+    pathname.startsWith("/learn/sql-views") ||
+    pathname.startsWith("/learn/sql-indexes") ||
+    pathname.startsWith("/learn/sql-stored-procedures") ||
+    pathname.startsWith("/learn/sql-projects")
+  ) {
+    return "sql";
+  }
+  if (
+    pathname.startsWith("/learn/java-fundamentals") ||
+    pathname.startsWith("/learn/java-intermediate") ||
+    pathname.startsWith("/learn/java-collections") ||
+    pathname.startsWith("/learn/java-advanced")
+  ) {
+    return "java";
   }
   return null;
 }

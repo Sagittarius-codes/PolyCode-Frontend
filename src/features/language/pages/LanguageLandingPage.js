@@ -79,7 +79,7 @@ const languageMeta = {
   },
   quantum: {
     name: "Quantum",
-    icon: "/images/logo.png",
+    icon: "/images/quantum-lang-icon.png",
     color: "#6366f1",
     description:
       "Explore quantum computing concepts, circuits, gates, simulators, and hybrid classical-quantum workflows.",
@@ -96,7 +96,7 @@ export default function LanguageLandingPage({ selectedLanguage, onLanguageSelect
   const key = languageKey(displayLanguage);
   const meta = languageMeta[key] || {
     name: displayLanguage,
-    icon: "💻",
+    Icon: Code2,
     color: "#00d4ff",
     description:
       "Explore curated documentation, examples, practice tools, and learning paths for this language.",
@@ -136,7 +136,10 @@ export default function LanguageLandingPage({ selectedLanguage, onLanguageSelect
             (meta.icon.startsWith("http") || meta.icon.startsWith("/")) ? (
               <img src={meta.icon} alt="" />
             ) : (
-              <span>{meta.icon}</span>
+              React.createElement(meta.Icon || Code2, {
+                size: 36,
+                strokeWidth: 1.75,
+              })
             )}
           </div>
         </div>
