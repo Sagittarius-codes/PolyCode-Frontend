@@ -61,8 +61,10 @@ function buildActivityDaysFromDailyXp(dayCount, dailyXpDays = []) {
 }
 
 function buildActivityDaysFromCounts(dayCount, counts = new Map()) {
+  // Anchor to UTC days: the backend keys xp events by UTC date, so the
+  // grid keys must be UTC too or completions never match in UTC+ timezones.
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  today.setUTCHours(0, 0, 0, 0);
   const start = new Date(today.getTime() - (dayCount - 1) * DAY_MS);
 
   return Array.from({ length: dayCount }, (_, index) => {
@@ -75,6 +77,7 @@ function buildActivityDaysFromCounts(dayCount, counts = new Map()) {
       label: date.toLocaleDateString(undefined, {
         month: "short",
         day: "numeric",
+        timeZone: "UTC",
       }),
     };
   });
