@@ -114,6 +114,11 @@ export const COURSE_DISPLAY_NAMES = {
   "java-intermediate": "Java Intermediate",
   "java-advanced": "Java Advanced",
   "java-collections": "Java Collections",
+  "java-exception": "Java Exception Handling",
+  "java-multithreading": "Java Multithreading",
+  "java-jdbc": "Java JDBC",
+  "java-spring-boot": "Java Spring Boot",
+  "java-projects": "Java Projects",
 };
 
 export function slugifyCourseName(name) {

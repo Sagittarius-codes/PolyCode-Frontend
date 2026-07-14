@@ -47,6 +47,11 @@ export const COURSE_PROGRESS_REGISTRY = [
   { courseId: "java-intermediate", storagePrefix: "java_intermediate", scoped: false, notes: true },
   { courseId: "java-advanced", storagePrefix: "java_advanced", scoped: false, notes: true },
   { courseId: "java-collections", storagePrefix: "java_collections", scoped: false, notes: true },
+  { courseId: "java-exception", storagePrefix: "java_exception", scoped: false, notes: true },
+  { courseId: "java-multithreading", storagePrefix: "java_multithreading", scoped: false, notes: true },
+  { courseId: "java-jdbc", storagePrefix: "java_jdbc", scoped: false, notes: true },
+  { courseId: "java-spring-boot", storagePrefix: "java_spring_boot", scoped: false, notes: true },
+  { courseId: "java-projects", storagePrefix: "java_projects", scoped: false, notes: true },
 ];
 
 export function getCourseRegistryEntry(courseId) {
