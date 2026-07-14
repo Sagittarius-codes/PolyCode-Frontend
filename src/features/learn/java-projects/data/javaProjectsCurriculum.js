@@ -5,8 +5,6 @@
 // includes the accumulated classes from earlier lessons in the SAME chapter,
 // and asks the student to add the next piece of a real, growing project.
 
-const ACCENT = "#f97316";
-
 function quiz(question, options, answer, explanation) {
   return { type: "quiz", question, options, answer, explanation };
 }
@@ -16,9 +14,6 @@ function callout(variant, content) {
 function text(content, codeBlock = null) {
   if (codeBlock) return { type: "text", content, code: { lang: "java", ...codeBlock } };
   return { type: "text", content };
-}
-function diagram(title, nodes) {
-  return { type: "diagram", title, nodes };
 }
 
 export const JAVA_PROJECTS_CHAPTERS = [

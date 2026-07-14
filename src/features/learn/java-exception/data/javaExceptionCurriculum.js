@@ -443,7 +443,7 @@ try {
           title: "Service Exception Chain",
           description: [
             { type: "text", content: "Create ServiceException extending RuntimeException that wraps a cause. Catch a NumberFormatException when parsing '\"abc\"' and rethrow it as ServiceException('Invalid input'). Print both messages." },
-            { type: "expected", label: "Expected output", content: `Service error: Invalid input\nCause: For input string: \"abc\"` },
+            { type: "expected", label: "Expected output", content: `Service error: Invalid input\nCause: For input string: "abc"` },
           ],
           starterCode: `public class Solution {
     static class ServiceException extends RuntimeException {

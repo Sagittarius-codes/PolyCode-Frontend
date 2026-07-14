@@ -223,7 +223,8 @@ app.feature.discount-enabled=true`,
           ),
           callout(
             "info",
-            "Values can be injected into your code with @Value(\"\\${app.feature.discount-enabled}\") private boolean discountEnabled;",
+            'Values can be injected into your code with @Value("$' +
+              '{app.feature.discount-enabled}") private boolean discountEnabled;',
           ),
           quiz(
             "Where does Spring Boot look for application.properties by default?",
