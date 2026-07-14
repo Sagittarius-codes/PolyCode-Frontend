@@ -58,6 +58,13 @@ export function getCourseRegistryEntry(courseId) {
   return COURSE_PROGRESS_REGISTRY.find((c) => c.courseId === courseId) || null;
 }
 
+export function getCourseIdByStoragePrefix(storagePrefix) {
+  const entry = COURSE_PROGRESS_REGISTRY.find(
+    (c) => c.storagePrefix === storagePrefix,
+  );
+  return entry?.courseId || null;
+}
+
 export function storageKeysForPrefix(prefix) {
   return {
     progress: `${prefix}_progress`,

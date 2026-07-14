@@ -4,8 +4,11 @@ import { useAuth } from "../auth/context/AuthContext";
 import { rememberSignedInUser } from "../../lib/authSession";
 import ProfileEditSection from "./components/ProfileEditSection";
 import ProfileHero from "./components/ProfileHero";
+import LearnerStatsRow from "./components/LearnerStatsRow";
+import AllCoursesList from "./components/AllCoursesList";
 import DailyXpProgressSection from "./components/DailyXpProgressSection";
 import useDailyXpProgress from "./hooks/useDailyXpProgress";
+import useLearnDashboard from "./hooks/useLearnDashboard";
 import { ALL_LESSONS } from "../learn/oops-cpp/data/oopsCurriculum";
 import useOopsProgress from "../learn/oops-cpp/hooks/useOopsProgress";
 import { POINTER_LESSONS } from "../learn/pointers-cpp/data/pointersCurriculum";
@@ -279,6 +282,12 @@ export default function ProfilePage() {
     username: routeUsername || profileUser?.username || "",
     token,
   });
+  const learnDashboard = useLearnDashboard({
+    enabled: Boolean(profileUser?.username || isOwnProfile),
+    isOwnProfile,
+    username: routeUsername || profileUser?.username || "",
+    token,
+  });
 
   const trackMaps = {
     "oops-cpp":
@@ -317,10 +326,13 @@ export default function ProfilePage() {
     PANDAS_LESSONS.length +
     FASTAPI_LESSONS.length;
   const totalPct = Math.round((totalCompleted / totalLessons) * 100) || 0;
-  const totalStreak =
-    remoteLearn.byCourseId["oops-cpp"]?.currentStreak ||
-    oops.remoteProgress?.currentStreak ||
-    0;
+  const totalStreak = Math.max(
+    learnDashboard.overview?.activeStreak || 0,
+    learnDashboard.overview?.bestStreak || 0,
+    remoteLearn.byCourseId["oops-cpp"]?.currentStreak || 0,
+    oops.remoteProgress?.currentStreak || 0,
+    0,
+  );
   const [activityWidth, setActivityWidth] = React.useState(0);
   const activityWrapRef = React.useRef(null);
   const activityDayCount = getResponsiveActivityDays(activityWidth);
@@ -556,26 +568,18 @@ export default function ProfilePage() {
         />
       )}
 
-      <section className="profile-overview-grid">
-        <div>
-          <span>Total Lessons</span>
-          <strong>
-            {totalCompleted}/{totalLessons}
-          </strong>
-        </div>
-        <div>
-          <span>OOPs Bookmarks</span>
-          <strong>{trackBookmarks["oops-cpp"].length}</strong>
-        </div>
-        <div>
-          <span>Pointers Bookmarks</span>
-          <strong>{trackBookmarks["pointers-cpp"].length}</strong>
-        </div>
-        <div>
-          <span>Total Progress</span>
-          <strong>{totalPct}%</strong>
-        </div>
-      </section>
+      <LearnerStatsRow
+        overview={learnDashboard.overview}
+        showEngagement={isOwnProfile}
+        featuredCompleted={totalCompleted}
+        featuredTotal={totalLessons}
+        featuredPct={totalPct}
+      />
+
+      <AllCoursesList
+        courses={learnDashboard.courses}
+        showEngagement={isOwnProfile}
+      />
 
       {isOwnProfile ? (
         <DailyXpProgressSection
@@ -611,11 +615,10 @@ export default function ProfilePage() {
             href={track.href}
             accent={track.accent}
             streak={
-              track.courseId === "oops-cpp"
-                ? totalStreak
-                : trackMaps[track.courseId]
-                  ? remoteLearn.byCourseId[track.courseId]?.currentStreak || 0
-                  : 0
+              remoteLearn.byCourseId[track.courseId]?.currentStreak ||
+              (track.courseId === "oops-cpp"
+                ? oops.remoteProgress?.currentStreak || 0
+                : 0)
             }
           />
         ))}

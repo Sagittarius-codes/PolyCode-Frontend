@@ -8,6 +8,7 @@ import {
   readScopedJson,
   readScopedString,
 } from "./scopedProgressStorage";
+import { loadQuizAttempts } from "./lessonQuizUtils";
 
 function readUnscopedJson(key, fallback) {
   try {
@@ -18,11 +19,73 @@ function readUnscopedJson(key, fallback) {
   }
 }
 
+function escapeRegex(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Scan localStorage for read / confidence / quiz keys for a storage prefix.
+ * @returns {{ [lessonId]: { read?, confidence?, quizAttempts? } }}
+ */
+export function collectLocalEngagementMap(storagePrefix) {
+  const engagementMap = {};
+  if (!storagePrefix || typeof localStorage === "undefined") {
+    return engagementMap;
+  }
+
+  const readRe = new RegExp(`^${escapeRegex(storagePrefix)}_read_(.+)$`);
+  const confRe = new RegExp(`^${escapeRegex(storagePrefix)}_confidence_(.+)$`);
+  const quizRe = new RegExp(
+    `^${escapeRegex(storagePrefix)}_quiz_attempts_(.+)$`,
+  );
+
+  const ensure = (lessonId) => {
+    if (!engagementMap[lessonId]) {
+      engagementMap[lessonId] = {};
+    }
+    return engagementMap[lessonId];
+  };
+
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const key = localStorage.key(index);
+    if (!key) continue;
+
+    let match = key.match(readRe);
+    if (match) {
+      const lessonId = match[1];
+      if (localStorage.getItem(key) === "true") {
+        ensure(lessonId).read = true;
+      }
+      continue;
+    }
+
+    match = key.match(confRe);
+    if (match) {
+      const lessonId = match[1];
+      const value = localStorage.getItem(key) || "";
+      if (value) ensure(lessonId).confidence = value;
+      continue;
+    }
+
+    match = key.match(quizRe);
+    if (match) {
+      const lessonId = match[1];
+      const attempts = loadQuizAttempts(storagePrefix, lessonId);
+      if (Object.keys(attempts).length > 0) {
+        ensure(lessonId).quizAttempts = attempts;
+      }
+    }
+  }
+
+  return engagementMap;
+}
+
 function hasLocalPayload(payload) {
   return (
     Object.keys(payload.completedMap || {}).length > 0 ||
     Object.keys(payload.savedCodeMap || {}).length > 0 ||
     Object.keys(payload.notesMap || {}).length > 0 ||
+    Object.keys(payload.engagementMap || {}).length > 0 ||
     (payload.bookmarks || []).length > 0 ||
     Boolean(payload.lastLessonId)
   );
@@ -74,12 +137,15 @@ export async function mergeLearnProgressOnLogin(token, user) {
     );
     lastLessonId = lastLessonId || unscopedLast || null;
 
+    const engagementMap = collectLocalEngagementMap(entry.storagePrefix);
+
     const payload = {
       completedMap,
       savedCodeMap,
       notesMap,
       bookmarks,
       lastLessonId,
+      engagementMap,
     };
 
     if (hasLocalPayload(payload)) {

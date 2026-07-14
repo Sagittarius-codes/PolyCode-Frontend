@@ -58,6 +58,39 @@ export function addCourseTime(token, courseId, minutes) {
   });
 }
 
+export function upsertLessonEngagement(token, courseId, payload) {
+  return request(courseId, "/engagement", token, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getLearnDashboard(token) {
+  const data = await apiFetch("/auth/learn/dashboard", {
+    token,
+    fallbackMessage: "Unable to load learner dashboard",
+  });
+  return {
+    overview: data.overview || {},
+    courses: data.courses || [],
+  };
+}
+
+export async function getPublicLearnDashboard(username) {
+  const clean = String(username || "").replace(/^@/, "").trim();
+  const data = await apiFetch(
+    `/auth/username/${encodeURIComponent(clean)}/learn/dashboard`,
+    {
+      auth: false,
+      fallbackMessage: "Unable to load public learner dashboard",
+    },
+  );
+  return {
+    overview: data.overview || {},
+    courses: data.courses || [],
+  };
+}
+
 export async function listMyCourseProgress(token) {
   const data = await apiFetch("/auth/learn/progress", {
     token,
@@ -105,6 +138,21 @@ export function savedCodeToMap(progress) {
 export function notesToMap(progress) {
   return (progress?.notes || []).reduce((acc, item) => {
     acc[item.lessonId] = item.note;
+    return acc;
+  }, {});
+}
+
+export function engagementToMap(progress) {
+  return (progress?.lessonEngagement || []).reduce((acc, item) => {
+    if (!item?.lessonId) return acc;
+    acc[item.lessonId] = {
+      read: Boolean(item.read),
+      confidence: item.confidence || "",
+      quizAttempts:
+        item.quizAttempts && typeof item.quizAttempts === "object"
+          ? item.quizAttempts
+          : {},
+    };
     return acc;
   }, {});
 }
