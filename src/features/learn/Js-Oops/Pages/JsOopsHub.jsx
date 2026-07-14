@@ -5,7 +5,7 @@ import {
   JS_OOPS_LESSONS,
   JS_OOPS_TOTAL_XP,
 } from "../data/jsOopsCurriculum";
-import useJsOopsProgress from "../hooks/useJsOopsProgress";
+import useJsOopsProgress from "../Hooks/useJsOopsProgress";
 
 const BASE_PATH = "/learn/js-oops";
 

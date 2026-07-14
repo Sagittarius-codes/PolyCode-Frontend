@@ -1,9 +1,9 @@
 import useCourseProgress from "../../shared/useCourseProgress";
 
-export default function useJavaCollectionsProgress() {
+export default function useJsOopsProgress() {
   return useCourseProgress({
-    courseId: "java-collections",
-    storagePrefix: "java_collections",
+    courseId: "js-oops",
+    storagePrefix: "js_oops",
     scoped: false,
     supportsNotes: true,
   });

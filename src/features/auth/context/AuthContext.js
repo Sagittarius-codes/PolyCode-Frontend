@@ -22,12 +22,15 @@ import {
   uploadProfileAvatar,
 } from "../../profile/services/profileApi";
 import { isolateLearnProgressForUser } from "../../learn/shared/scopedProgressStorage";
+import { mergeLearnProgressOnLogin } from "../../learn/shared/mergeLearnProgressOnLogin";
 
 const AuthContext = createContext(null);
 
-function applySession(setToken, setUser, token, user) {
+async function applySession(setToken, setUser, token, user) {
   setStoredToken(token);
   rememberSignedInUser(user);
+  // Upload browser progress to Mongo before clearing legacy/guest keys.
+  await mergeLearnProgressOnLogin(token, user);
   const userId = user?._id || user?.id;
   if (userId) {
     isolateLearnProgressForUser(String(userId));
@@ -68,6 +71,7 @@ export function AuthProvider({ children }) {
       if (requestId !== bootstrapRequestId.current) return;
 
       rememberSignedInUser(data.user);
+      await mergeLearnProgressOnLogin(storedToken, data.user);
       const userId = data.user?._id || data.user?.id;
       if (userId) {
         isolateLearnProgressForUser(String(userId));
@@ -102,7 +106,7 @@ export function AuthProvider({ children }) {
       });
 
       bootstrapRequestId.current += 1;
-      applySession(setToken, setUser, data.token, data.user);
+      await applySession(setToken, setUser, data.token, data.user);
       setLoading(false);
       return data.user;
     } catch (error) {
@@ -127,7 +131,7 @@ export function AuthProvider({ children }) {
         });
 
         bootstrapRequestId.current += 1;
-        applySession(setToken, setUser, data.token, data.user);
+        await applySession(setToken, setUser, data.token, data.user);
         setLoading(false);
         return data.user;
       } catch (error) {

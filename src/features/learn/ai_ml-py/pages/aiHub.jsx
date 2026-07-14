@@ -5,7 +5,7 @@ import {
   AI_LESSONS,
   AI_TOTAL_XP,
 } from "../data/aiCurriculum";
-import useAiProgress from "../hooks/useaiProgress";
+import useAiProgress from "../hooks/useAiProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 
