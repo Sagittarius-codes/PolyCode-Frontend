@@ -9,6 +9,7 @@ import useSqlStoredProceduresProgress from "../hooks/useSqlStoredProceduresProgr
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-stored-procedures";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlStoredProceduresHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Stored Procedures"
+        totalLessons={SQLSTOREDPROCEDURES_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLSTOREDPROCEDURES_TOTAL_XP}
       />
     </div>
   );

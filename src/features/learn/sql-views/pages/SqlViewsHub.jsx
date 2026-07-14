@@ -9,6 +9,7 @@ import useSqlViewsProgress from "../hooks/useSqlViewsProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-views";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlViewsHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Views"
+        totalLessons={SQLVIEWS_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLVIEWS_TOTAL_XP}
       />
     </div>
   );

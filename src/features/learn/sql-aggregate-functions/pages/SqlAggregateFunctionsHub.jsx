@@ -9,6 +9,7 @@ import useSqlAggregateFunctionsProgress from "../hooks/useSqlAggregateFunctionsP
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-aggregate-functions";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlAggregateFunctionsHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Aggregate Functions"
+        totalLessons={SQLAGGREGATEFUNCTIONS_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLAGGREGATEFUNCTIONS_TOTAL_XP}
       />
     </div>
   );

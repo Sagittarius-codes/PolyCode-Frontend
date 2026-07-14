@@ -9,6 +9,7 @@ import useSqlSubqueriesProgress from "../hooks/useSqlSubqueriesProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-subqueries";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlSubqueriesHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Subqueries"
+        totalLessons={SQLSUBQUERIES_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLSUBQUERIES_TOTAL_XP}
       />
     </div>
   );

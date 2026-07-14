@@ -9,6 +9,7 @@ import useSqlQueriesProgress from "../hooks/useSqlQueriesProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-queries";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlQueriesHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Queries"
+        totalLessons={SQLQUERIES_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLQUERIES_TOTAL_XP}
       />
     </div>
   );

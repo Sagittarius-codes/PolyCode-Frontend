@@ -9,6 +9,7 @@ import useSqlJoinsProgress from "../hooks/useSqlJoinsProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-joins";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlJoinsHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Joins"
+        totalLessons={SQLJOINS_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLJOINS_TOTAL_XP}
       />
     </div>
   );

@@ -9,6 +9,7 @@ import useSqlIndexesProgress from "../hooks/useSqlIndexesProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-indexes";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlIndexesHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Indexes"
+        totalLessons={SQLINDEXES_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLINDEXES_TOTAL_XP}
       />
     </div>
   );

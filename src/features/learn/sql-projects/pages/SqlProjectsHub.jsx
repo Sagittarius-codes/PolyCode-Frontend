@@ -9,6 +9,7 @@ import useSqlProjectsProgress from "../hooks/useSqlProjectsProgress";
 import LearnChapterPathOverview from "../../shared/LearnChapterPathOverview";
 import LearnChapterGrid from "../../shared/LearnChapterGrid";
 import LearnChapterIcon from "../../shared/LearnChapterIcon";
+import CourseCertificate from "../../shared/CourseCertificate";
 
 const BASE_PATH = "/learn/sql-projects";
 const LEARNING_PATH = [
@@ -355,6 +356,13 @@ export default function SqlProjectsHub() {
         progress={progress}
         basePath={BASE_PATH}
         navigate={navigate}
+      />
+      <CourseCertificate
+        courseName="SQL Projects"
+        totalLessons={SQLPROJECTS_LESSONS.length}
+        completedCount={completedCount}
+        earnedXP={earnedXP}
+        totalXP={SQLPROJECTS_TOTAL_XP}
       />
     </div>
   );

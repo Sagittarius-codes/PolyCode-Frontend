@@ -37,6 +37,14 @@ function writeUnscopedJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function remoteCompletionCount(progress) {
+  return (progress?.completedLessons || []).length;
+}
+
+function mergeCompletionMaps(localMap = {}, remoteMap = {}) {
+  return { ...localMap, ...remoteMap };
+}
+
 /**
  * Shared course progress hook: MongoDB when signed in, localStorage for guests.
  */
@@ -143,15 +151,25 @@ export default function useCourseProgress({
   );
 
   const mirrorRemoteToLocal = useCallback(
-    (progress) => {
+    (progress, { allowEmptyWipe = false } = {}) => {
       if (!progress || !token) return;
-      writeProgressLocal(progressToMap(progress));
+      const remoteMap = progressToMap(progress);
+      if (
+        !allowEmptyWipe &&
+        Object.keys(remoteMap).length === 0 &&
+        Object.keys(readProgressLocal()).length > 0
+      ) {
+        // Empty GET shell must not erase local completions before first DB write.
+        return;
+      }
+      writeProgressLocal(remoteMap);
       writeCodeLocal(savedCodeToMap(progress));
       writeBookmarksLocal(progress.bookmarks || []);
       if (supportsNotes) writeNotesLocal(notesToMap(progress));
       if (progress.lastLessonId) writeLastLocal(progress.lastLessonId);
     },
     [
+      readProgressLocal,
       supportsNotes,
       token,
       writeBookmarksLocal,
@@ -160,6 +178,26 @@ export default function useCourseProgress({
       writeNotesLocal,
       writeProgressLocal,
     ],
+  );
+
+  const adoptRemoteProgress = useCallback(
+    (progress, { allowEmptyWipe = false } = {}) => {
+      if (!progress) return;
+      const remoteMap = progressToMap(progress);
+      const localMap = readProgressLocal();
+      if (
+        !allowEmptyWipe &&
+        Object.keys(remoteMap).length === 0 &&
+        (Object.keys(localMap).length > 0 ||
+          remoteCompletionCount(remoteProgress) > 0)
+      ) {
+        return;
+      }
+      setRemoteProgress(progress);
+      mirrorRemoteToLocal(progress, { allowEmptyWipe });
+      setSyncState("synced");
+    },
+    [mirrorRemoteToLocal, readProgressLocal, remoteProgress],
   );
 
   useEffect(() => {
@@ -174,8 +212,18 @@ export default function useCourseProgress({
     getCourseProgress(token, courseId)
       .then((progress) => {
         if (cancelled) return;
+        const remoteMap = progressToMap(progress);
+        const localMap = readProgressLocal();
+        if (
+          Object.keys(remoteMap).length === 0 &&
+          Object.keys(localMap).length > 0
+        ) {
+          setRemoteProgress(progress);
+          setSyncState("synced");
+          return;
+        }
         setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
+        mirrorRemoteToLocal(progress, { allowEmptyWipe: true });
         setSyncState("synced");
       })
       .catch(() => {
@@ -191,12 +239,25 @@ export default function useCourseProgress({
 
   const completedMap = useMemo(() => {
     void localVersion;
-    if (remoteProgress) return progressToMap(remoteProgress);
+    const localMap =
+      scoped && !scopeReady
+        ? {}
+        : !isAuthenticated && scoped
+          ? {}
+          : !isAuthenticated
+            ? {}
+            : readProgressLocal();
+
+    if (remoteProgress) {
+      const remoteMap = progressToMap(remoteProgress);
+      if (Object.keys(remoteMap).length > 0) {
+        return mergeCompletionMaps(localMap, remoteMap);
+      }
+      if (Object.keys(localMap).length > 0) return localMap;
+      return remoteMap;
+    }
     if (token && (loading || (scoped && !scopeReady))) return {};
-    if (!isAuthenticated && scoped) return {};
-    // Guests get empty completed for gated courses; unscoped bookmarks still readable
-    if (!isAuthenticated) return {};
-    return readProgressLocal();
+    return localMap;
   }, [
     remoteProgress,
     localVersion,
@@ -239,50 +300,61 @@ export default function useCourseProgress({
     return readBookmarksLocal();
   }, [remoteProgress, localVersion, scoped, scopeReady, readBookmarksLocal]);
 
-  const lastLessonId = remoteProgress
-    ? remoteProgress.lastLessonId
-    : scoped && !scopeReady
-      ? null
-      : readLastLocal();
+  const lastLessonId =
+    remoteProgress?.lastLessonId ||
+    (scoped && !scopeReady ? null : readLastLocal());
 
   const completeLesson = useCallback(
     async (lesson) => {
       const lessonId = lesson.id || lesson.lessonId;
       if (!lessonId) return;
 
+      const applyLocalComplete = () => {
+        const current = readProgressLocal();
+        current[lessonId] = { xp: lesson.xp || 0, at: Date.now() };
+        writeProgressLocal(current);
+        writeLastLocal(lessonId);
+        refreshLocal();
+      };
+
       if (token) {
-        const progress = await completeCourseLesson(token, courseId, {
-          lessonId,
-          title: lesson.title || "",
-          chapterId: lesson.chapterId || "",
-          chapterTitle: lesson.chapterTitle || "",
-          xp: lesson.xp || 0,
-        });
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
-        setSyncState("synced");
-        recordLessonXp(token, courseId, lesson);
-        upsertLessonEngagement(token, courseId, {
-          lessonId,
-          challengeLastResult: "pass",
-        }).catch(() => {});
+        applyLocalComplete();
+        try {
+          const progress = await completeCourseLesson(token, courseId, {
+            lessonId,
+            title: lesson.title || "",
+            chapterId: lesson.chapterId || "",
+            chapterTitle: lesson.chapterTitle || "",
+            xp: lesson.xp || 0,
+          });
+          setRemoteProgress(progress);
+          mirrorRemoteToLocal(progress, { allowEmptyWipe: true });
+          setSyncState("synced");
+          recordLessonXp(token, courseId, lesson);
+          upsertLessonEngagement(token, courseId, {
+            lessonId,
+            challengeLastResult: "pass",
+          }).catch(() => {});
+        } catch (error) {
+          setSyncState("error");
+          const status = error?.status || error?.statusCode;
+          if (status === 401) {
+            throw error;
+          }
+          console.error(
+            `Unable to sync ${courseId} lesson completion to server:`,
+            error?.message || error,
+          );
+        }
         return;
       }
 
       if (scoped && !scopeReady) return;
-      if (!isAuthenticated && !token) {
-        // Allow guest local-only completion cache for future merge
-      }
-      const current = readProgressLocal();
-      current[lessonId] = { xp: lesson.xp, at: Date.now() };
-      writeProgressLocal(current);
-      writeLastLocal(lessonId);
-      refreshLocal();
+      applyLocalComplete();
       recordLessonXp(token, courseId, lesson);
     },
     [
       courseId,
-      isAuthenticated,
       mirrorRemoteToLocal,
       readProgressLocal,
       refreshLocal,
@@ -300,11 +372,13 @@ export default function useCourseProgress({
       if (token) {
         try {
           const progress = await setLastCourseLesson(token, courseId, lessonId);
-          setRemoteProgress(progress);
-          mirrorRemoteToLocal(progress);
-          setSyncState("synced");
+          adoptRemoteProgress(progress);
+          writeLastLocal(lessonId);
+          refreshLocal();
         } catch {
           setSyncState("error");
+          writeLastLocal(lessonId);
+          refreshLocal();
         }
         return;
       }
@@ -313,8 +387,8 @@ export default function useCourseProgress({
       refreshLocal();
     },
     [
+      adoptRemoteProgress,
       courseId,
-      mirrorRemoteToLocal,
       refreshLocal,
       scopeReady,
       scoped,
@@ -326,10 +400,15 @@ export default function useCourseProgress({
   const saveCode = useCallback(
     async (lessonId, code) => {
       if (token) {
-        const progress = await saveCourseCode(token, courseId, lessonId, code);
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
-        setSyncState("synced");
+        try {
+          const progress = await saveCourseCode(token, courseId, lessonId, code);
+          setRemoteProgress(progress);
+          mirrorRemoteToLocal(progress, { allowEmptyWipe: true });
+          setSyncState("synced");
+        } catch (error) {
+          setSyncState("error");
+          console.error("Unable to save lesson code:", error?.message || error);
+        }
         return;
       }
       if (!isAuthenticated) return;
@@ -356,10 +435,15 @@ export default function useCourseProgress({
     async (lessonId, note) => {
       if (!supportsNotes) return;
       if (token) {
-        const progress = await saveCourseNote(token, courseId, lessonId, note);
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
-        setSyncState("synced");
+        try {
+          const progress = await saveCourseNote(token, courseId, lessonId, note);
+          setRemoteProgress(progress);
+          mirrorRemoteToLocal(progress, { allowEmptyWipe: true });
+          setSyncState("synced");
+        } catch (error) {
+          setSyncState("error");
+          console.error("Unable to save lesson note:", error?.message || error);
+        }
         return;
       }
       if (scoped && !scopeReady) return;
@@ -392,10 +476,22 @@ export default function useCourseProgress({
   const toggleBookmark = useCallback(
     async (lessonId) => {
       if (token) {
-        const progress = await toggleCourseBookmark(token, courseId, lessonId);
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
-        setSyncState("synced");
+        try {
+          const progress = await toggleCourseBookmark(
+            token,
+            courseId,
+            lessonId,
+          );
+          setRemoteProgress(progress);
+          mirrorRemoteToLocal(progress, { allowEmptyWipe: true });
+          setSyncState("synced");
+        } catch (error) {
+          setSyncState("error");
+          console.error(
+            "Unable to sync bookmark:",
+            error?.message || error,
+          );
+        }
         return;
       }
       if (scoped && !scopeReady) return;
@@ -423,14 +519,12 @@ export default function useCourseProgress({
       if (!token) return;
       try {
         const progress = await addCourseTime(token, courseId, minutes);
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
-        setSyncState("synced");
+        adoptRemoteProgress(progress);
       } catch {
         setSyncState("error");
       }
     },
-    [courseId, mirrorRemoteToLocal, token],
+    [adoptRemoteProgress, courseId, token],
   );
 
   useLessonTimeTracking(addTime, activeLessonId);
@@ -445,14 +539,12 @@ export default function useCourseProgress({
           challengeLastResult: passed ? "pass" : "fail",
           incrementChallengeAttempts: !passed,
         });
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
-        setSyncState("synced");
+        adoptRemoteProgress(progress);
       } catch (error) {
         console.warn("Challenge engagement sync failed:", error.message);
       }
     },
-    [courseId, mirrorRemoteToLocal, token],
+    [adoptRemoteProgress, courseId, token],
   );
 
   const recordLastTab = useCallback(
@@ -463,13 +555,12 @@ export default function useCourseProgress({
           lessonId,
           lastTab,
         });
-        setRemoteProgress(progress);
-        mirrorRemoteToLocal(progress);
+        adoptRemoteProgress(progress);
       } catch {
         /* non-blocking */
       }
     },
-    [courseId, mirrorRemoteToLocal, token],
+    [adoptRemoteProgress, courseId, token],
   );
 
   return {
