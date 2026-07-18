@@ -363,6 +363,15 @@ export const languageCourses = {
       href: "/learn/php-oop",
       accent: "#f59e0b",
     },
+    {
+      title: "Laravel Basics",
+      tag: "Interactive Course",
+      icon: Layers3,
+      description:
+        "Routing, controllers, Blade templates, Eloquent ORM, and middleware — with theory, quizzes, and real challenges covering PHP's most popular framework.",
+      href: "/learn/laravel-basics",
+      accent: "#ef4444",
+    },
   ],
   csharp: [
     {
@@ -606,6 +615,7 @@ export const learnNavByLanguage = {
     { label: "Sessions & Cookies", to: "/learn/php-sessions" },
     { label: "MySQL", to: "/learn/php-mysql" },
     { label: "PHP OOP", to: "/learn/php-oop" },
+    { label: "Laravel Basics", to: "/learn/laravel-basics" },
   ],
   csharp: [{ label: "C# Basics", to: "/learn/c-sharp-fundamentals" }],
   "c#": [{ label: "C# Basics", to: "/learn/c-sharp-fundamentals" }],
@@ -676,7 +686,8 @@ export function inferLanguageFromLearnPath(pathname = "") {
     pathname.startsWith("/learn/php-forms") ||
     pathname.startsWith("/learn/php-sessions") ||
     pathname.startsWith("/learn/php-mysql") ||
-    pathname.startsWith("/learn/php-oop")
+    pathname.startsWith("/learn/php-oop") ||
+    pathname.startsWith("/learn/laravel-basics")
   ) {
     return "php";
   }

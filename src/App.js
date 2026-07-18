@@ -250,6 +250,12 @@ const PhpOopHub = lazyWithChunkRetry(
 const PhpOopLessonPage = lazyWithChunkRetry(
   () => import('./features/learn/php-oop/pages/phpOopLessonPage'),
 );
+const LaravelBasicsHub = lazyWithChunkRetry(
+  () => import('./features/learn/laravel-basics/pages/laravelBasicsHub'),
+);
+const LaravelBasicsLessonPage = lazyWithChunkRetry(
+  () => import('./features/learn/laravel-basics/pages/laravelBasicsLessonPage'),
+);
 const JavaFundamentalsHub = lazyWithChunkRetry(
   () => import("./features/learn/java-fundamentals/pages/JavaFundamentalsHub"),
 );
@@ -647,7 +653,8 @@ function AppRoutes() {
       path.startsWith("/learn/php-forms") ||
       path.startsWith("/learn/php-sessions") ||
       path.startsWith("/learn/php-mysql") ||
-      path.startsWith("/learn/php-oop")
+      path.startsWith("/learn/php-oop") ||
+      path.startsWith("/learn/laravel-basics")
     ) {
       handleLanguageSelect("PHP", { stay: true });
     } else if (
@@ -1395,7 +1402,7 @@ function AppRoutes() {
                 <PhpFundamentalsLessonPage />
               </LearnShell>
             </ThemedShell>
-          }A
+          }
         />
 
         {/* ── PHP Forms ── */}
@@ -1521,6 +1528,38 @@ function AppRoutes() {
             <ThemedShell theme={theme}>
               <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
                 <PhpOopLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+
+        {/* ── Laravel Basics ── */}
+        <Route
+          path="/learn/laravel-basics"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
+                <LaravelBasicsHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/laravel-basics/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
+                <LaravelBasicsLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/laravel-basics/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
+                <LaravelBasicsLessonPage />
               </LearnShell>
             </ThemedShell>
           }
