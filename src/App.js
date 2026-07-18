@@ -156,6 +156,12 @@ const FastapiHub = lazyWithChunkRetry(
 const FastapiLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/fastapi-py/pages/FastapiLessonPage"),
 );
+const PytorchHub = lazyWithChunkRetry(
+  () => import("./features/learn/pytorch-py/pages/PytorchHub"),
+);
+const PytorchLessonPage = lazyWithChunkRetry(
+  () => import("./features/learn/pytorch-py/pages/PytorchLessonPage"),
+);
 const AiHub = lazyWithChunkRetry(
   () => import("./features/learn/ai_ml-py/pages/aiHub"),
 );
@@ -628,6 +634,44 @@ function AppRoutes() {
     const inferred = inferLanguageFromLearnPath(path);
     if (inferred) {
       handleLanguageSelect(inferred, { stay: true });
+    if (
+      path.startsWith("/learn/python-fundamentals") ||
+      path.startsWith("/learn/numpy-py") ||
+      path.startsWith("/learn/pandas-py") ||
+      path.startsWith("/learn/matplotlib-py") ||
+      path.startsWith("/learn/fastapi-py") ||
+      path.startsWith("/learn/pytorch-py") ||
+      path.startsWith("/learn/ai_ml-py")
+    ) {
+      handleLanguageSelect("Python", { stay: true });
+    } else if (path.startsWith("/learn/js-fundamentals")) {
+      handleLanguageSelect("JavaScript", { stay: true });
+    } else if (path.startsWith("/learn/c-sharp-fundamentals")) {
+      handleLanguageSelect("C#", { stay: true });
+    } else if (
+      path.startsWith("/learn/java-fundamentals") ||
+      path.startsWith("/learn/java-intermediate") ||
+      path.startsWith("/learn/java-exception") ||
+      path.startsWith("/learn/java-multithreading") ||
+      path.startsWith("/learn/java-jdbc") ||
+      path.startsWith("/learn/java-spring-boot") ||
+      path.startsWith("/learn/java-projects")
+    ) {
+      handleLanguageSelect("Java", { stay: true });
+    } else if (
+      path.startsWith("/learn/php-fundamentals") ||
+      path.startsWith("/learn/php-forms") ||
+      path.startsWith("/learn/php-sessions") ||
+      path.startsWith("/learn/php-mysql") ||
+      path.startsWith("/learn/php-oop") ||
+      path.startsWith("/learn/laravel-basics")
+    ) {
+      handleLanguageSelect("PHP", { stay: true });
+    } else if (
+      path.startsWith("/learn/oops-cpp") ||
+      path.startsWith("/learn/pointers-cpp")
+    ) {
+      handleLanguageSelect("C++", { stay: true });
     }
   }, [location.pathname, handleLanguageSelect]);
 
@@ -1004,6 +1048,52 @@ function AppRoutes() {
                 selectedLanguage={selectedLanguage}
               >
                 <FastapiLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        {/* PyTorch Python Course Routes */}
+        <Route
+          path="/learn/pytorch-py"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PytorchHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/pytorch-py/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PytorchLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/pytorch-py/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell
+                theme={theme}
+                onThemeChange={handleThemeChange}
+                onGoToStackPicker={goToStackPicker}
+                selectedLanguage={selectedLanguage}
+              >
+                <PytorchLessonPage />
               </LearnShell>
             </ThemedShell>
           }
