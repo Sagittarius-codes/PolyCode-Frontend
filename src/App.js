@@ -2298,8 +2298,8 @@ const CDataStructuresHub = lazyWithChunkRetry(() => import("./features/learn/c-d
 const CDataStructuresLessonPage = lazyWithChunkRetry(() => import("./features/learn/c-data-structures/pages/CDataStructuresLessonPage"));
 const CProjectsHub = lazyWithChunkRetry(() => import("./features/learn/c-projects/pages/CProjectsHub"));
 const CProjectsLessonPage = lazyWithChunkRetry(() => import("./features/learn/c-projects/pages/CProjectsLessonPage"));
-const RubyFundamentalsHub = lazyWithChunkRetry(() => import("./features/learn/ruby-fundamentals/pages/RubyFundamentalsHub"));
-const RubyFundamentalsLessonPage = lazyWithChunkRetry(() => import("./features/learn/ruby-fundamentals/pages/RubyFundamentalsLessonPage"));
+const RubyFundamentalsHub = lazyWithChunkRetry(() => import("./features/learn/ruby-fundamentals/pages/rubyFundamentalsHub"));
+const RubyFundamentalsLessonPage = lazyWithChunkRetry(() => import("./features/learn/ruby-fundamentals/pages/rubyFundamentalsLessonPage"));
 const RubyGemsHub = lazyWithChunkRetry(() => import("./features/learn/ruby-gems/pages/RubyGemsHub"));
 const RubyGemsLessonPage = lazyWithChunkRetry(() => import("./features/learn/ruby-gems/pages/RubyGemsLessonPage"));
 const GoFundamentalsHub = lazyWithChunkRetry(() => import("./features/learn/golang-fundamentals/pages/GoFundamentalsHub"));
