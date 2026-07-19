@@ -262,15 +262,6 @@ export const languageCourses = {
       accent: "#009688",
     },
     {
-      title: "PyTorch · py",
-      tag: "Deep Learning",
-      icon: Brain,
-      description:
-        "Beginner → advanced: tensors, autograd, nn.Module, training loops, CNNs, save/load, and a hands-on capstone.",
-      href: "/learn/pytorch-py",
-      accent: "#EE4C2C",
-    },
-    {
       tag: "Data Visualization",
       title: "Matplotlib · py",
       description:
@@ -392,6 +383,15 @@ export const languageCourses = {
         "Routing, controllers, Blade templates, Eloquent ORM, and middleware — with theory, quizzes, and real challenges covering PHP's most popular framework.",
       href: "/learn/laravel-basics",
       accent: "#ef4444",
+    },
+    {
+      title: "PHP Projects",
+      tag: "Capstone Course",
+      icon: Brain,
+      description:
+        "Build 4 real, growing projects — a contact book, a session-backed blog, a MySQL task tracker, and a mini Laravel-style API — applying everything from Fundamentals to Laravel.",
+      href: "/learn/php-projects",
+      accent: "#8b5cf6",
     },
   ],
   csharp: [
@@ -668,7 +668,6 @@ export const learnNavByLanguage = {
     { label: "NumPy", to: "/learn/numpy-py" },
     { label: "Pandas", to: "/learn/pandas-py" },
     { label: "FastAPI", to: "/learn/fastapi-py" },
-    { label: "PyTorch", to: "/learn/pytorch-py" },
     { label: "Matplotlib", to: "/learn/matplotlib-py" },
     { label: "AI/ML", to: "/learn/ai_ml-py" },
   ],
@@ -697,6 +696,7 @@ export const learnNavByLanguage = {
     { label: "MySQL", to: "/learn/php-mysql" },
     { label: "PHP OOP", to: "/learn/php-oop" },
     { label: "Laravel Basics", to: "/learn/laravel-basics" },
+    { label: "PHP Projects", to: "/learn/php-projects" },
   ],
   csharp: [{ label: "C# Basics", to: "/learn/c-sharp-fundamentals" }],
   "c#": [{ label: "C# Basics", to: "/learn/c-sharp-fundamentals" }],
@@ -766,7 +766,6 @@ export function inferLanguageFromLearnPath(pathname = "") {
     pathname.startsWith("/learn/numpy-py") ||
     pathname.startsWith("/learn/pandas-py") ||
     pathname.startsWith("/learn/fastapi-py") ||
-    pathname.startsWith("/learn/pytorch-py") ||
     pathname.startsWith("/learn/matplotlib-py") ||
     pathname.startsWith("/learn/ai_ml-py")
   ) {
@@ -789,7 +788,8 @@ export function inferLanguageFromLearnPath(pathname = "") {
     pathname.startsWith("/learn/php-sessions") ||
     pathname.startsWith("/learn/php-mysql") ||
     pathname.startsWith("/learn/php-oop") ||
-    pathname.startsWith("/learn/laravel-basics")
+    pathname.startsWith("/learn/laravel-basics") ||
+    pathname.startsWith("/learn/php-projects")
   ) {
     return "php";
   }

@@ -156,12 +156,6 @@ const FastapiHub = lazyWithChunkRetry(
 const FastapiLessonPage = lazyWithChunkRetry(
   () => import("./features/learn/fastapi-py/pages/FastapiLessonPage"),
 );
-const PytorchHub = lazyWithChunkRetry(
-  () => import("./features/learn/pytorch-py/pages/PytorchHub"),
-);
-const PytorchLessonPage = lazyWithChunkRetry(
-  () => import("./features/learn/pytorch-py/pages/PytorchLessonPage"),
-);
 const AiHub = lazyWithChunkRetry(
   () => import("./features/learn/ai_ml-py/pages/aiHub"),
 );
@@ -262,6 +256,12 @@ const LaravelBasicsHub = lazyWithChunkRetry(
 );
 const LaravelBasicsLessonPage = lazyWithChunkRetry(
   () => import('./features/learn/laravel-basics/pages/laravelBasicsLessonPage'),
+);
+const PhpProjectsHub = lazyWithChunkRetry(
+  () => import('./features/learn/php-projects/pages/phpProjectsHub'),
+);
+const PhpProjectsLessonPage = lazyWithChunkRetry(
+  () => import('./features/learn/php-projects/pages/phpProjectsLessonPage'),
 );
 const JavaFundamentalsHub = lazyWithChunkRetry(
   () => import("./features/learn/java-fundamentals/pages/JavaFundamentalsHub"),
@@ -640,7 +640,7 @@ function AppRoutes() {
       path.startsWith("/learn/pandas-py") ||
       path.startsWith("/learn/matplotlib-py") ||
       path.startsWith("/learn/fastapi-py") ||
-      path.startsWith("/learn/pytorch-py") ||
+      path.startsWith("/learn/matplotlib-py") ||
       path.startsWith("/learn/ai_ml-py")
     ) {
       handleLanguageSelect("Python", { stay: true });
@@ -664,7 +664,8 @@ function AppRoutes() {
       path.startsWith("/learn/php-sessions") ||
       path.startsWith("/learn/php-mysql") ||
       path.startsWith("/learn/php-oop") ||
-      path.startsWith("/learn/laravel-basics")
+      path.startsWith("/learn/laravel-basics") ||
+      path.startsWith("/learn/php-projects")
     ) {
       handleLanguageSelect("PHP", { stay: true });
     } else if (
@@ -1048,52 +1049,6 @@ function AppRoutes() {
                 selectedLanguage={selectedLanguage}
               >
                 <FastapiLessonPage />
-              </LearnShell>
-            </ThemedShell>
-          }
-        />
-        {/* PyTorch Python Course Routes */}
-        <Route
-          path="/learn/pytorch-py"
-          element={
-            <ThemedShell theme={theme}>
-              <LearnShell
-                theme={theme}
-                onThemeChange={handleThemeChange}
-                onGoToStackPicker={goToStackPicker}
-                selectedLanguage={selectedLanguage}
-              >
-                <PytorchHub />
-              </LearnShell>
-            </ThemedShell>
-          }
-        />
-        <Route
-          path="/learn/pytorch-py/lesson/:lessonId"
-          element={
-            <ThemedShell theme={theme}>
-              <LearnShell
-                theme={theme}
-                onThemeChange={handleThemeChange}
-                onGoToStackPicker={goToStackPicker}
-                selectedLanguage={selectedLanguage}
-              >
-                <PytorchLessonPage />
-              </LearnShell>
-            </ThemedShell>
-          }
-        />
-        <Route
-          path="/learn/pytorch-py/:lessonId"
-          element={
-            <ThemedShell theme={theme}>
-              <LearnShell
-                theme={theme}
-                onThemeChange={handleThemeChange}
-                onGoToStackPicker={goToStackPicker}
-                selectedLanguage={selectedLanguage}
-              >
-                <PytorchLessonPage />
               </LearnShell>
             </ThemedShell>
           }
@@ -1616,6 +1571,38 @@ function AppRoutes() {
             <ThemedShell theme={theme}>
               <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
                 <LaravelBasicsLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+
+        {/* ── PHP Projects ── */}
+        <Route
+          path="/learn/php-projects"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
+                <PhpProjectsHub />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/php-projects/lesson/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
+                <PhpProjectsLessonPage />
+              </LearnShell>
+            </ThemedShell>
+          }
+        />
+        <Route
+          path="/learn/php-projects/:lessonId"
+          element={
+            <ThemedShell theme={theme}>
+              <LearnShell theme={theme} onThemeChange={handleThemeChange} onGoToStackPicker={goToStackPicker} selectedLanguage={selectedLanguage}>
+                <PhpProjectsLessonPage />
               </LearnShell>
             </ThemedShell>
           }
