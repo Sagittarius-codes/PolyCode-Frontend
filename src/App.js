@@ -1,4 +1,7 @@
-import { inferLanguageFromLearnPath } from "./features/language/courseCatalog";
+import {
+  courseStackGroups,
+  inferLanguageFromLearnPath,
+} from "./features/language/courseCatalog";
 import React, { Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
@@ -630,50 +633,10 @@ function AppRoutes() {
   }, []);
 
   React.useEffect(() => {
-    const path = location.pathname;
-    const inferred = inferLanguageFromLearnPath(path);
-    if (inferred) {
-      handleLanguageSelect(inferred, { stay: true });
-    if (
-      path.startsWith("/learn/python-fundamentals") ||
-      path.startsWith("/learn/numpy-py") ||
-      path.startsWith("/learn/pandas-py") ||
-      path.startsWith("/learn/matplotlib-py") ||
-      path.startsWith("/learn/fastapi-py") ||
-      path.startsWith("/learn/matplotlib-py") ||
-      path.startsWith("/learn/ai_ml-py")
-    ) {
-      handleLanguageSelect("Python", { stay: true });
-    } else if (path.startsWith("/learn/js-fundamentals")) {
-      handleLanguageSelect("JavaScript", { stay: true });
-    } else if (path.startsWith("/learn/c-sharp-fundamentals")) {
-      handleLanguageSelect("C#", { stay: true });
-    } else if (
-      path.startsWith("/learn/java-fundamentals") ||
-      path.startsWith("/learn/java-intermediate") ||
-      path.startsWith("/learn/java-exception") ||
-      path.startsWith("/learn/java-multithreading") ||
-      path.startsWith("/learn/java-jdbc") ||
-      path.startsWith("/learn/java-spring-boot") ||
-      path.startsWith("/learn/java-projects")
-    ) {
-      handleLanguageSelect("Java", { stay: true });
-    } else if (
-      path.startsWith("/learn/php-fundamentals") ||
-      path.startsWith("/learn/php-forms") ||
-      path.startsWith("/learn/php-sessions") ||
-      path.startsWith("/learn/php-mysql") ||
-      path.startsWith("/learn/php-oop") ||
-      path.startsWith("/learn/laravel-basics") ||
-      path.startsWith("/learn/php-projects")
-    ) {
-      handleLanguageSelect("PHP", { stay: true });
-    } else if (
-      path.startsWith("/learn/oops-cpp") ||
-      path.startsWith("/learn/pointers-cpp")
-    ) {
-      handleLanguageSelect("C++", { stay: true });
-    }
+    const inferred = inferLanguageFromLearnPath(location.pathname);
+    if (!inferred) return;
+    const stack = courseStackGroups.find((entry) => entry.id === inferred);
+    handleLanguageSelect(stack?.label || inferred, { stay: true });
   }, [location.pathname, handleLanguageSelect]);
 
   React.useEffect(() => {
